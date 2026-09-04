@@ -71,15 +71,22 @@
                     </div>
                 </section>
 
-                <!-- TAB 2: 景點庫 -->
+                <!-- TAB 2: 景點庫 & 搜尋 -->
                 <section id="tab-poi" class="tab-content">
                     <div class="section-header">
-                        <h2><i class="fa-solid fa-map-location-dot"></i> 景點與美食資料庫</h2>
-                        <p class="section-subtitle">點擊「加入行程」將地點安排到您的旅程中</p>
+                        <h2><i class="fa-solid fa-map-location-dot"></i> 即時地點搜尋與景點庫</h2>
+                        <p class="section-subtitle">輸入世界上任何地點，或是從我們精選的清單中挑選！</p>
                     </div>
                     
+                    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                        <input type="text" id="poi-search-input" placeholder="例如：福岡 麵包超人博物館..." style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 1rem;">
+                        <button id="poi-search-btn" style="background: var(--primary-color); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">
+                            <i class="fa-solid fa-magnifying-glass"></i> 搜尋
+                        </button>
+                    </div>
+
                     <div class="poi-filters">
-                        <button class="poi-filter-btn active" data-filter="all">全部</button>
+                        <button class="poi-filter-btn active" data-filter="all">精選全部</button>
                         <button class="poi-filter-btn" data-filter="attraction">景點</button>
                         <button class="poi-filter-btn" data-filter="food">美食</button>
                         <button class="poi-filter-btn" data-filter="hotel">飯店</button>

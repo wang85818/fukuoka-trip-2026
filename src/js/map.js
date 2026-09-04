@@ -26,6 +26,12 @@ const mapModule = {
         this.markers = [];
     },
 
+    openMobileMap: function() {
+        if(window.innerWidth < 768) {
+            document.getElementById('map-container').classList.add('active');
+        }
+    },
+
     updateRouteForDay: async function(dayData) {
         this.clearMap();
 
@@ -35,6 +41,8 @@ const mapModule = {
 
         const validStops = dayData.timeline.filter(t => t.lat && t.lng);
         if (validStops.length === 0) return;
+
+        this.openMobileMap();
 
         // Add markers for each stop
         const bounds = L.latLngBounds();
@@ -80,6 +88,7 @@ const mapModule = {
 
     showPOI: function(lat, lng, name) {
         this.clearMap();
+        this.openMobileMap();
         const marker = L.marker([lat, lng]).bindPopup(`<b>${name}</b>`).addTo(this.map);
         this.markers.push(marker);
         this.map.setView([lat, lng], 14);

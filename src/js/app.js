@@ -125,5 +125,64 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+    
+    // 6. Live POI Search Logic (Nominatim API)
+    const poiSearchBtn = document.getElementById('poi-search-btn');
+    const poiSearchInput = document.getElementById('poi-search-input');
+    
+    if (poiSearchBtn && poiSearchInput) {
+        poiSearchBtn.addEventListener('click', async () => {
+            const query = poiSearchInput.value.trim();
+            if (!query) return;
+            
+            poiSearchBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            poiSearchBtn.disabled = true;
+            
+            try {
+                const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data && data.length > 0) {
+                    const searchResults = data.map((item, index) => {
+                        const newPoi = {
+                            id: `search_${Date.now()}_${index}`,
+                            name: item.display_name.split(',')[0], // Use first part of address as name
+                            category: 'search',
+                            lat: parseFloat(item.lat),
+                            lng: parseFloat(item.lon),
+                            desc: item.display_name
+                        };
+                        // Temporarily add to DB so it can be added to itinerary
+                        window.appData.poiDatabase.push(newPoi);
+                        return newPoi;
+                    });
+                    
+                    // Render the results
+                    window.renderUI.renderPOIs(searchResults);
+                    
+                    // Reset filters UI
+                    if(poiFilterBtns.length > 0) {
+                        poiFilterBtns.forEach(b => b.classList.remove('active'));
+                    }
+                } else {
+                    alert('找不到該地點，請嘗試更換關鍵字！');
+                }
+            } catch (err) {
+                console.error("Search failed:", err);
+                alert('搜尋失敗，請稍後再試。');
+            } finally {
+                poiSearchBtn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i> 搜尋';
+                poiSearchBtn.disabled = false;
+            }
+        });
+        
+        // Enter key to search
+        poiSearchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                poiSearchBtn.click();
+            }
+        });
+    }
 
 });

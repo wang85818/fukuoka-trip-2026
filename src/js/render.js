@@ -49,7 +49,7 @@ function renderItinerary(itineraryData) {
                         <span class="day-badge">${dayData.day}</span>
                         <h3 class="theme">${dayData.theme}</h3>
                     </div>
-                    <button class="export-btn" onclick="window.optimizeModule.optimizeDay(${dayIndex})" style="background: var(--gradient-primary); border: none; padding: 5px 10px; border-radius: 8px; color: white; cursor: pointer;">
+                    <button class="export-btn" onclick="window.optimizeModule.optimizeDay(${dayIndex})" style="background: var(--primary-color); border: none; padding: 5px 10px; border-radius: 8px; color: white; cursor: pointer;">
                         <i class="fa-solid fa-route"></i> 最佳化路線
                     </button>
                 </div>
@@ -85,7 +85,7 @@ function renderPOIs(dataToRender) {
 
     poiList.innerHTML = '';
     db.forEach(poi => {
-        let icon = '';
+        let icon = '<i class="fa-solid fa-location-dot"></i>'; // default
         if (poi.category === 'attraction') icon = '<i class="fa-solid fa-camera-retro"></i>';
         if (poi.category === 'food') icon = '<i class="fa-solid fa-utensils"></i>';
         if (poi.category === 'hotel') icon = '<i class="fa-solid fa-bed"></i>';

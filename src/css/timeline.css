@@ -62,6 +62,45 @@
 .timeline-item {
     position: relative;
     padding-bottom: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.timeline-item-content {
+    flex: 1;
+}
+
+/* Drag Handle */
+.drag-handle {
+    color: #cbd5e1;
+    cursor: grab;
+    padding: 2px 8px;
+    font-size: 1.2rem;
+    transition: color 0.2s;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.drag-handle:hover, .drag-handle:active {
+    color: var(--primary-color);
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}
+
+/* SortableJS States */
+.sortable-ghost {
+    opacity: 0.4;
+    background: #f8fafc;
+}
+
+.sortable-drag {
+    background: white;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    z-index: 1000;
 }
 
 .timeline-item:last-child {

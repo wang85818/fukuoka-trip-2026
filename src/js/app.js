@@ -5,6 +5,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Render Initial Data
     if (window.appData && window.renderUI) {
         window.renderUI.renderChangelog(window.appData.changelogData);
+        
+        // Load custom sorted itinerary if exists
+        const savedItinerary = localStorage.getItem('fukuokaItinerary');
+        if (savedItinerary) {
+            try {
+                window.appData.itineraryData = JSON.parse(savedItinerary);
+            } catch(e) {
+                console.error("Error parsing saved itinerary", e);
+            }
+        }
+        
         window.renderUI.renderItinerary(window.appData.itineraryData);
     } else {
         console.error("Data or Render modules not loaded correctly.");

@@ -20,22 +20,26 @@ function renderChangelog(changelogData) {
 function renderItinerary(itineraryData) {
     const itineraryList = document.getElementById('itinerary-list');
     if(itineraryList) {
-        itineraryData.forEach((dayData, index) => {
+        itineraryList.innerHTML = ''; // clear before render
+        itineraryData.forEach((dayData, dayIndex) => {
             const card = document.createElement('div');
             card.className = 'card';
-            card.style.animationDelay = `${index * 0.1}s`;
+            card.style.animationDelay = `${dayIndex * 0.1}s`;
 
             const hotelHTML = dayData.hotelMap 
                 ? `${dayData.hotel} <a href="https://maps.google.com/?q=${dayData.hotelMap}" target="_blank" class="map-link-inline"><i class="fa-solid fa-location-dot"></i> 地圖</a>`
                 : dayData.hotel;
 
             // Generate Timeline HTML
-            let timelineHTML = `<div class="timeline-container">`;
-            dayData.timeline.forEach(item => {
+            let timelineHTML = `<div class="timeline-container" data-day-index="${dayIndex}">`;
+            dayData.timeline.forEach((item, itemIndex) => {
                 timelineHTML += `
-                    <div class="timeline-item">
-                        <div class="timeline-time">${item.time}</div>
-                        <div class="timeline-content">${item.desc}</div>
+                    <div class="timeline-item" data-item-index="${itemIndex}">
+                        <div class="timeline-item-content">
+                            <div class="timeline-time">${item.time}</div>
+                            <div class="timeline-content">${item.desc}</div>
+                        </div>
+                        <div class="drag-handle"><i class="fa-solid fa-bars"></i></div>
                     </div>
                 `;
             });
@@ -74,6 +78,33 @@ function renderItinerary(itineraryData) {
                 </div>
             `;
             itineraryList.appendChild(card);
+        });
+
+        // Initialize SortableJS for each timeline container
+        const timelines = document.querySelectorAll('.timeline-container');
+        timelines.forEach(container => {
+            Sortable.create(container, {
+                handle: '.drag-handle', // drag handle selector
+                animation: 150,
+                ghostClass: 'sortable-ghost',
+                dragClass: 'sortable-drag',
+                onEnd: function (evt) {
+                    const dayIndex = evt.to.getAttribute('data-day-index');
+                    const oldIndex = evt.oldIndex;
+                    const newIndex = evt.newIndex;
+                    
+                    if (oldIndex !== newIndex) {
+                        // Reorder data array
+                        const dayData = window.appData.itineraryData[dayIndex];
+                        const movedItem = dayData.timeline.splice(oldIndex, 1)[0];
+                        dayData.timeline.splice(newIndex, 0, movedItem);
+                        
+                        // Save to localStorage for now (until Firebase is ready)
+                        localStorage.setItem('fukuokaItinerary', JSON.stringify(window.appData.itineraryData));
+                        console.log('Saved new order to localStorage', window.appData.itineraryData);
+                    }
+                }
+            });
         });
     }
 }

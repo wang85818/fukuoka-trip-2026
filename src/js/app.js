@@ -21,6 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
         window.renderUI.renderItinerary(window.appData.itineraryData);
     }
 
+    // Always render local data immediately so the UI is never blank
+    fallbackToLocal();
+
     if (window.db) {
         try {
             const itineraryRef = window.db.ref('itinerary');
@@ -34,19 +37,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     window.renderUI.renderItinerary(window.appData.itineraryData);
                 } else {
                     // First time setup: push local default data to cloud
-                    itineraryRef.set(window.appData.itineraryData);
-                    window.renderUI.renderItinerary(window.appData.itineraryData);
+                    itineraryRef.set(window.appData.itineraryData).catch(err => {
+                        console.warn("Could not push default data. Firebase might be read-only or not created.", err);
+                    });
                 }
             }, (error) => {
-                console.error("Firebase permission or config error:", error);
-                fallbackToLocal();
+                console.warn("Firebase permission or config error:", error);
+                // We already rendered local, so just log warning
             });
         } catch (error) {
-            console.error("Firebase DB error:", error);
-            fallbackToLocal();
+            console.warn("Firebase DB error:", error);
         }
-    } else {
-        fallbackToLocal();
     }
 
     // 2. Tab Switching Logic

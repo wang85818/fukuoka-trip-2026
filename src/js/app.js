@@ -2,11 +2,30 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     
-    // 1. Render Initial Data
+    // 1. Render Changelog
     if (window.appData && window.renderUI) {
         window.renderUI.renderChangelog(window.appData.changelogData);
+    }
+
+    // 2. Initial Data & Firebase Sync
+    if (window.db) {
+        const itineraryRef = window.db.ref('itinerary');
         
-        // Load custom sorted itinerary if exists
+        // Listen for real-time updates from Firebase
+        itineraryRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                // Use cloud data
+                window.appData.itineraryData = data;
+                window.renderUI.renderItinerary(window.appData.itineraryData);
+            } else {
+                // First time setup: push local default data to cloud
+                itineraryRef.set(window.appData.itineraryData);
+                window.renderUI.renderItinerary(window.appData.itineraryData);
+            }
+        });
+    } else {
+        // Fallback to localStorage
         const savedItinerary = localStorage.getItem('fukuokaItinerary');
         if (savedItinerary) {
             try {
@@ -15,10 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error("Error parsing saved itinerary", e);
             }
         }
-        
         window.renderUI.renderItinerary(window.appData.itineraryData);
-    } else {
-        console.error("Data or Render modules not loaded correctly.");
     }
 
     // 2. Tab Switching Logic

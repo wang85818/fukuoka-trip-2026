@@ -99,9 +99,15 @@ function renderItinerary(itineraryData) {
                         const movedItem = dayData.timeline.splice(oldIndex, 1)[0];
                         dayData.timeline.splice(newIndex, 0, movedItem);
                         
-                        // Save to localStorage for now (until Firebase is ready)
-                        localStorage.setItem('fukuokaItinerary', JSON.stringify(window.appData.itineraryData));
-                        console.log('Saved new order to localStorage', window.appData.itineraryData);
+                        // Save to Firebase or localStorage
+                        if (window.db) {
+                            window.db.ref('itinerary').set(window.appData.itineraryData)
+                                .then(() => console.log('Saved new order to Firebase'))
+                                .catch(err => console.error('Error saving to Firebase', err));
+                        } else {
+                            localStorage.setItem('fukuokaItinerary', JSON.stringify(window.appData.itineraryData));
+                            console.log('Saved new order to localStorage');
+                        }
                     }
                 }
             });

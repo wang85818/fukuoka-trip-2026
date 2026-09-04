@@ -1,25 +1,20 @@
-// firebaseConfig.js - Placeholder for Firebase Configuration
-
-/* 
- * TODO: 替換為您的 Firebase 設定
- * 將下方的 firebaseConfig 替換為您在 Firebase Console 取得的設定。
- */
-
-/*
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js";
+// firebaseConfig.js - Firebase Initialization
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  databaseURL: "YOUR_DATABASE_URL",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyDHu73tPpecwuYpf4Il-G0AMtyxqfjbFHQ",
+  authDomain: "fukuoka-trip-fe725.firebaseapp.com",
+  projectId: "fukuoka-trip-fe725",
+  storageBucket: "fukuoka-trip-fe725.firebasestorage.app",
+  messagingSenderId: "847063005945",
+  appId: "1:847063005945:web:ea2fcb105bc60fd19c8028",
+  measurementId: "G-1NWKYTX619"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-export const db = getDatabase(app);
-*/
+// Initialize Firebase using compat SDK
+if (typeof firebase !== 'undefined') {
+    firebase.initializeApp(firebaseConfig);
+    // Expose database reference to window for other modules
+    window.db = firebase.database();
+} else {
+    console.error("Firebase SDK not loaded.");
+}

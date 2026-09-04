@@ -1,5 +1,13 @@
 const changelogData = [
     {
+        version: "v1.3.0",
+        date: "2026-09-04",
+        changes: [
+            "拖拉式行程看板：可以按住行程右側的「三條線 (≡)」圖示，隨意拖曳改變景點的順序。",
+            "多人即時共編 (Real-time Collaboration)：整合 Firebase Realtime Database，任何改變都會在一秒內即時同步給所有旅伴！"
+        ]
+    },
+    {
         version: "v1.2.0",
         date: "2026-09-04",
         changes: [

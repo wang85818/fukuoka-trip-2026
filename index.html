@@ -22,196 +22,209 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Header -->
-        <header class="hero">
-            <div class="hero-content">
-                <h1>福岡親子旅遊 🇯🇵</h1>
-                <p>9/19 (六) - 9/27 (日)</p>
-            </div>
-            <div class="hero-overlay"></div>
-        </header>
+    <div class="split-layout">
+        <div class="app-container">
+            <!-- Header -->
+            <header class="hero">
+                <div class="hero-content">
+                    <h1>福岡親子旅遊 🇯🇵</h1>
+                    <p>9/19 (六) - 9/27 (日)</p>
+                </div>
+                <div class="hero-overlay"></div>
+            </header>
 
-        <!-- Main Content Area -->
-        <main class="content-area">
+            <!-- Main Content Area -->
+            <main class="content-area">
+                
+                <!-- TAB 1: 行程表 -->
+                <section id="tab-itinerary" class="tab-content active">
+                    <div class="section-header">
+                        <h2><i class="fa-regular fa-calendar-days"></i> 每日行程</h2>
+                    </div>
+                    <div id="itinerary-list" class="itinerary-list">
+                        <!-- Cards dynamically inserted here -->
+                    </div>
+                </section>
+
+                <!-- TAB 2: 行李清單 -->
+                <section id="tab-checklist" class="tab-content">
+                    <div class="section-header">
+                        <h2><i class="fa-solid fa-suitcase-rolling"></i> 專屬行李清單</h2>
+                        <p class="section-subtitle">點擊項目打勾，進度會自動儲存喔！</p>
+                    </div>
+                    
+                    <div class="checklist-container">
+                        <!-- Category 1 -->
+                        <div class="checklist-card">
+                            <h3>👶 育兒必備</h3>
+                            <ul class="check-list" data-category="baby">
+                                <li><label><input type="checkbox" value="diapers"> <span>尿布 (隨身+行李箱)</span></label></li>
+                                <li><label><input type="checkbox" value="milk"> <span>奶粉 / 奶瓶 / 奶粉分裝盒</span></label></li>
+                                <li><label><input type="checkbox" value="stroller"> <span>嬰兒推車 (輕便可摺疊)</span></label></li>
+                                <li><label><input type="checkbox" value="snacks"> <span>寶寶零食 / 安撫玩具</span></label></li>
+                                <li><label><input type="checkbox" value="wipes"> <span>濕紙巾 / 衛生紙</span></label></li>
+                                <li><label><input type="checkbox" value="baby-clothes"> <span>寶寶換洗衣物 / 外套</span></label></li>
+                            </ul>
+                        </div>
+
+                        <!-- Category 2 -->
+                        <div class="checklist-card">
+                            <h3>📄 重要文件與物品</h3>
+                            <ul class="check-list" data-category="docs">
+                                <li><label><input type="checkbox" value="passport"> <span>護照 (確認效期>6個月)</span></label></li>
+                                <li><label><input type="checkbox" value="vjw"> <span>Visit Japan Web 截圖/QR Code</span></label></li>
+                                <li><label><input type="checkbox" value="credit-card"> <span>信用卡 (綁定 Apple Pay / 實體卡)</span></label></li>
+                                <li><label><input type="checkbox" value="cash"> <span>日幣現金</span></label></li>
+                                <li><label><input type="checkbox" value="wifi"> <span>網卡 / WiFi 機</span></label></li>
+                                <li><label><input type="checkbox" value="power-bank"> <span>行動電源 / 充電線</span></label></li>
+                            </ul>
+                        </div>
+
+                        <!-- Category 3 -->
+                        <div class="checklist-card">
+                            <h3>👕 隨身衣物與藥品</h3>
+                            <ul class="check-list" data-category="clothes">
+                                <li><label><input type="checkbox" value="clothes"> <span>大人換洗衣物 (9天份或可洗)</span></label></li>
+                                <li><label><input type="checkbox" value="jacket"> <span>防風薄外套</span></label></li>
+                                <li><label><input type="checkbox" value="umbrella"> <span>雨傘 / 輕便雨衣</span></label></li>
+                                <li><label><input type="checkbox" value="medicine"> <span>常備藥品 (退燒、腸胃、暈車藥)</span></label></li>
+                                <li><label><input type="checkbox" value="skincare"> <span>保養品 / 防曬乳</span></label></li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB 3: 實用資訊 -->
+                <section id="tab-info" class="tab-content">
+                    <div class="section-header">
+                        <h2><i class="fa-solid fa-circle-info"></i> 實用資訊</h2>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h3>✈️ 航班資訊 (長榮航空)</h3>
+                        <div class="info-item">
+                            <strong>【去程】9/19 (六)</strong>
+                            <p>BR102｜桃園 (T2) 07:30 → 福岡 10:55</p>
+                        </div>
+                        <div class="info-item">
+                            <strong>【回程】9/27 (日)</strong>
+                            <p>BR105｜福岡 12:20 → 桃園 (T2) 13:45</p>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>🏨 住宿總表</h3>
+                        <ul class="hotel-list">
+                            <li>
+                                <strong>EN HOTEL Hakata (博多)</strong>
+                                <p>日期：9/19 - 9/21</p>
+                                <a href="https://maps.google.com/?q=EN+HOTEL+Hakata" target="_blank" class="map-link"><i class="fa-solid fa-location-dot"></i> 開啟地圖</a>
+                            </li>
+                            <li>
+                                <strong>THE BASICS FUKUOKA (博多)</strong>
+                                <p>日期：9/21 - 9/23</p>
+                                <a href="https://maps.google.com/?q=THE+BASICS+FUKUOKA" target="_blank" class="map-link"><i class="fa-solid fa-location-dot"></i> 開啟地圖</a>
+                            </li>
+                            <li>
+                                <strong>神和苑 Kannawaen (別府)</strong>
+                                <p>日期：9/23 - 9/24</p>
+                                <a href="https://maps.google.com/?q=別府+神和苑" target="_blank" class="map-link"><i class="fa-solid fa-location-dot"></i> 開啟地圖</a>
+                            </li>
+                            <li>
+                                <strong>Nikko Kumamoto (熊本)</strong>
+                                <p>日期：9/24 - 9/25</p>
+                                <a href="https://maps.google.com/?q=Hotel+Nikko+Kumamoto" target="_blank" class="map-link"><i class="fa-solid fa-location-dot"></i> 開啟地圖</a>
+                            </li>
+                            <li>
+                                <strong>THE LUIGANS (海之中道)</strong>
+                                <p>日期：9/25 - 9/27</p>
+                                <a href="https://maps.google.com/?q=THE+LUIGANS+Spa+and+Resort" target="_blank" class="map-link"><i class="fa-solid fa-location-dot"></i> 開啟地圖</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>🔗 重要連結</h3>
+                        <a href="https://vjw-lp.digital.go.jp/zh-hant/" target="_blank" class="action-btn">
+                            <i class="fa-solid fa-plane-arrival"></i> Visit Japan Web 登入
+                        </a>
+                    </div>
+
+                    <!-- Changelog Section -->
+                    <div class="info-card changelog-card">
+                        <h3><i class="fa-solid fa-clock-rotate-left"></i> 網站更新日誌</h3>
+                        <div id="changelog-list" class="changelog-list">
+                            <!-- Rendered by JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TAB 4: 討論區 -->
+                <section id="tab-discussion" class="tab-content">
+                    <div class="section-header">
+                        <h2><i class="fa-regular fa-comments"></i> 行程討論區</h2>
+                        <p class="discussion-hint">歡迎在下方留言討論行程安排或發問喔！</p>
+                    </div>
+                    
+                    <div class="giscus-container">
+                        <!-- Giscus component -->
+                        <script src="https://giscus.app/client.js"
+                                data-repo="wang85818/fukuoka-trip-2026"
+                                data-repo-id="R_kgDOUOcDog"
+                                data-category="Announcements"
+                                data-category-id="DIC_kwDOUOcDos4DE4Vi"
+                                data-mapping="pathname"
+                                data-strict="0"
+                                data-reactions-enabled="1"
+                                data-emit-metadata="0"
+                                data-input-position="bottom"
+                                data-theme="preferred_color_scheme"
+                                data-lang="zh-TW"
+                                crossorigin="anonymous"
+                                async>
+                        </script>
+                    </div>
+                </section>
+
+            </main>
             
-            <!-- TAB 1: 行程表 -->
-            <section id="tab-itinerary" class="tab-content active">
-                <div class="section-header">
-                    <h2><i class="fa-regular fa-calendar-days"></i> 每日行程</h2>
-                </div>
-                <div id="itinerary-list" class="itinerary-list">
-                    <!-- Cards dynamically inserted here -->
-                </div>
-            </section>
+            <!-- Bottom Navigation Bar -->
+            <nav class="bottom-nav">
+                <button class="nav-btn active" data-target="tab-itinerary">
+                    <i class="fa-solid fa-route"></i>
+                    <span>行程表</span>
+                </button>
+                <button class="nav-btn" data-target="tab-checklist">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span>清單</span>
+                </button>
+                <button class="nav-btn" data-target="tab-info">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>資訊</span>
+                </button>
+                <button class="nav-btn" data-target="tab-discussion">
+                    <i class="fa-solid fa-comments"></i>
+                    <span>討論</span>
+                </button>
+            </nav>
+        </div>
 
-            <!-- TAB 2: 行李清單 -->
-            <section id="tab-checklist" class="tab-content">
-                <div class="section-header">
-                    <h2><i class="fa-solid fa-suitcase-rolling"></i> 專屬行李清單</h2>
-                    <p class="section-subtitle">點擊項目打勾，進度會自動儲存喔！</p>
-                </div>
-                
-                <div class="checklist-container">
-                    <!-- Category 1 -->
-                    <div class="checklist-card">
-                        <h3>👶 育兒必備</h3>
-                        <ul class="check-list" data-category="baby">
-                            <li><label><input type="checkbox" value="diapers"> <span>尿布 (隨身+行李箱)</span></label></li>
-                            <li><label><input type="checkbox" value="milk"> <span>奶粉 / 奶瓶 / 奶粉分裝盒</span></label></li>
-                            <li><label><input type="checkbox" value="stroller"> <span>嬰兒推車 (輕便可摺疊)</span></label></li>
-                            <li><label><input type="checkbox" value="snacks"> <span>寶寶零食 / 安撫玩具</span></label></li>
-                            <li><label><input type="checkbox" value="wipes"> <span>濕紙巾 / 衛生紙</span></label></li>
-                            <li><label><input type="checkbox" value="baby-clothes"> <span>寶寶換洗衣物 / 外套</span></label></li>
-                        </ul>
-                    </div>
-
-                    <!-- Category 2 -->
-                    <div class="checklist-card">
-                        <h3>📄 重要文件與物品</h3>
-                        <ul class="check-list" data-category="docs">
-                            <li><label><input type="checkbox" value="passport"> <span>護照 (確認效期>6個月)</span></label></li>
-                            <li><label><input type="checkbox" value="vjw"> <span>Visit Japan Web 截圖/QR Code</span></label></li>
-                            <li><label><input type="checkbox" value="credit-card"> <span>信用卡 (綁定 Apple Pay / 實體卡)</span></label></li>
-                            <li><label><input type="checkbox" value="cash"> <span>日幣現金</span></label></li>
-                            <li><label><input type="checkbox" value="wifi"> <span>網卡 / WiFi 機</span></label></li>
-                            <li><label><input type="checkbox" value="power-bank"> <span>行動電源 / 充電線</span></label></li>
-                        </ul>
-                    </div>
-
-                    <!-- Category 3 -->
-                    <div class="checklist-card">
-                        <h3>👕 隨身衣物與藥品</h3>
-                        <ul class="check-list" data-category="clothes">
-                            <li><label><input type="checkbox" value="clothes"> <span>大人換洗衣物 (9天份或可洗)</span></label></li>
-                            <li><label><input type="checkbox" value="jacket"> <span>防風薄外套</span></label></li>
-                            <li><label><input type="checkbox" value="umbrella"> <span>雨傘 / 輕便雨衣</span></label></li>
-                            <li><label><input type="checkbox" value="medicine"> <span>常備藥品 (退燒、腸胃、暈車藥)</span></label></li>
-                            <li><label><input type="checkbox" value="skincare"> <span>保養品 / 防曬乳</span></label></li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB 3: 實用資訊 -->
-            <section id="tab-info" class="tab-content">
-                <div class="section-header">
-                    <h2><i class="fa-solid fa-circle-info"></i> 實用資訊</h2>
-                </div>
-                
-                <div class="info-card">
-                    <h3>✈️ 航班資訊 (長榮航空)</h3>
-                    <div class="info-item">
-                        <strong>【去程】9/19 (六)</strong>
-                        <p>BR102｜桃園 (T2) 07:30 → 福岡 10:55</p>
-                    </div>
-                    <div class="info-item">
-                        <strong>【回程】9/27 (日)</strong>
-                        <p>BR105｜福岡 12:20 → 桃園 (T2) 13:45</p>
-                    </div>
-                </div>
-
-                <div class="info-card">
-                    <h3>🏨 住宿總表</h3>
-                    <ul class="hotel-list">
-                        <li>
-                            <strong>EN HOTEL Hakata (博多)</strong>
-                            <p>日期：9/19 - 9/21</p>
-                            <a href="https://maps.google.com/?q=EN+HOTEL+Hakata" target="_blank" class="map-link"><i class="fa-solid fa-location-dot"></i> 開啟地圖</a>
-                        </li>
-                        <li>
-                            <strong>THE BASICS FUKUOKA (博多)</strong>
-                            <p>日期：9/21 - 9/23</p>
-                            <a href="https://maps.google.com/?q=THE+BASICS+FUKUOKA" target="_blank" class="map-link"><i class="fa-solid fa-location-dot"></i> 開啟地圖</a>
-                        </li>
-                        <li>
-                            <strong>神和苑 Kannawaen (別府)</strong>
-                            <p>日期：9/23 - 9/24</p>
-                            <a href="https://maps.google.com/?q=別府+神和苑" target="_blank" class="map-link"><i class="fa-solid fa-location-dot"></i> 開啟地圖</a>
-                        </li>
-                        <li>
-                            <strong>Nikko Kumamoto (熊本)</strong>
-                            <p>日期：9/24 - 9/25</p>
-                            <a href="https://maps.google.com/?q=Hotel+Nikko+Kumamoto" target="_blank" class="map-link"><i class="fa-solid fa-location-dot"></i> 開啟地圖</a>
-                        </li>
-                        <li>
-                            <strong>THE LUIGANS (海之中道)</strong>
-                            <p>日期：9/25 - 9/27</p>
-                            <a href="https://maps.google.com/?q=THE+LUIGANS+Spa+and+Resort" target="_blank" class="map-link"><i class="fa-solid fa-location-dot"></i> 開啟地圖</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="info-card">
-                    <h3>🔗 重要連結</h3>
-                    <a href="https://vjw-lp.digital.go.jp/zh-hant/" target="_blank" class="action-btn">
-                        <i class="fa-solid fa-plane-arrival"></i> Visit Japan Web 登入
-                    </a>
-                </div>
-
-                <!-- Changelog Section -->
-                <div class="info-card changelog-card">
-                    <h3><i class="fa-solid fa-clock-rotate-left"></i> 網站更新日誌</h3>
-                    <div id="changelog-list" class="changelog-list">
-                        <!-- Rendered by JS -->
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB 4: 討論區 -->
-            <section id="tab-discussion" class="tab-content">
-                <div class="section-header">
-                    <h2><i class="fa-regular fa-comments"></i> 行程討論區</h2>
-                    <p class="discussion-hint">歡迎在下方留言討論行程安排或發問喔！</p>
-                </div>
-                
-                <div class="giscus-container">
-                    <!-- Giscus component -->
-                    <script src="https://giscus.app/client.js"
-                            data-repo="wang85818/fukuoka-trip-2026"
-                            data-repo-id="R_kgDOUOcDog"
-                            data-category="Announcements"
-                            data-category-id="DIC_kwDOUOcDos4DE4Vi"
-                            data-mapping="pathname"
-                            data-strict="0"
-                            data-reactions-enabled="1"
-                            data-emit-metadata="0"
-                            data-input-position="bottom"
-                            data-theme="preferred_color_scheme"
-                            data-lang="zh-TW"
-                            crossorigin="anonymous"
-                            async>
-                    </script>
-                </div>
-            </section>
-
-        </main>
-        
-        <!-- Bottom Navigation Bar -->
-        <nav class="bottom-nav">
-            <button class="nav-btn active" data-target="tab-itinerary">
-                <i class="fa-solid fa-route"></i>
-                <span>行程表</span>
+        <!-- Map Container -->
+        <div class="map-container" id="map-container">
+            <button class="close-map-btn" onclick="document.getElementById('map-container').classList.remove('active')">
+                <i class="fa-solid fa-xmark"></i> 關閉地圖
             </button>
-            <button class="nav-btn" data-target="tab-checklist">
-                <i class="fa-solid fa-list-check"></i>
-                <span>清單</span>
-            </button>
-            <button class="nav-btn" data-target="tab-info">
-                <i class="fa-solid fa-circle-info"></i>
-                <span>資訊</span>
-            </button>
-            <button class="nav-btn" data-target="tab-discussion">
-                <i class="fa-solid fa-comments"></i>
-                <span>討論</span>
-            </button>
-        </nav>
+            <iframe id="map-iframe" 
+                src="https://maps.google.com/maps?q=福岡機場&t=&z=13&ie=UTF8&iwloc=&output=embed" 
+                width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0">
+            </iframe>
+        </div>
     </div>
     
     <!-- Modular JavaScript -->
-    <script src="src/data/data.js?v=5"></script>
-    <script src="src/js/firebaseConfig.js?v=5"></script>
-    <script src="src/js/render.js?v=5"></script>
-    <script src="src/js/app.js?v=5"></script>
+    <script src="src/data/data.js?v=6"></script>
+    <script src="src/js/firebaseConfig.js?v=6"></script>
+    <script src="src/js/render.js?v=6"></script>
+    <script src="src/js/app.js?v=6"></script>
 </body>
 </html>

@@ -7,7 +7,8 @@ const firebaseConfig = {
   storageBucket: "fukuoka-trip-fe725.firebasestorage.app",
   messagingSenderId: "847063005945",
   appId: "1:847063005945:web:ea2fcb105bc60fd19c8028",
-  measurementId: "G-1NWKYTX619"
+  measurementId: "G-1NWKYTX619",
+  databaseURL: "https://fukuoka-trip-fe725-default-rtdb.firebaseio.com"
 };
 
 // Initialize Firebase using compat SDK

@@ -34,7 +34,7 @@ function renderItinerary(itineraryData) {
             let timelineHTML = `<div class="timeline-container" data-day-index="${dayIndex}">`;
             dayData.timeline.forEach((item, itemIndex) => {
                 timelineHTML += `
-                    <div class="timeline-item" data-item-index="${itemIndex}">
+                    <div class="timeline-item" data-item-index="${itemIndex}" onclick="updateMap('${encodeURIComponent(item.desc)}')">
                         <div class="timeline-item-content">
                             <div class="timeline-time">${item.time}</div>
                             <div class="timeline-content">${item.desc}</div>
@@ -114,6 +114,27 @@ function renderItinerary(itineraryData) {
         });
     }
 }
+
+// Map Update Logic
+window.updateMap = function(query) {
+    const iframe = document.getElementById('map-iframe');
+    const mapContainer = document.getElementById('map-container');
+    
+    // Some basic parsing to remove noise from query
+    let cleanQuery = decodeURIComponent(query)
+        .replace(/出發前往|抵達|辦理入住|退房|前往/g, '')
+        .trim();
+        
+    if(cleanQuery.length === 0) return; // ignore empty
+
+    // Update iframe source (we append ' 福岡' to give google maps better context if it's a generic name)
+    iframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(cleanQuery + " 九州")}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
+    
+    // Show modal on mobile
+    if(window.innerWidth < 768) {
+        mapContainer.classList.add('active');
+    }
+};
 
 window.renderUI = {
     renderChangelog,

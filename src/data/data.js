@@ -1,5 +1,14 @@
 const changelogData = [
     {
+        version: "v1.2.0",
+        date: "2026-09-04",
+        changes: [
+            "專案結構化與模組化：將單一檔案拆分為前端現代化架構，為後續導入拖拉與協作功能打基礎。",
+            "將 CSS 拆分為 main, tabs, timeline 模組。",
+            "將 JavaScript 邏輯拆分為資料、渲染與主程式模組。"
+        ]
+    },
+    {
         version: "v1.1.0",
         date: "2026-09-04",
         changes: [
@@ -172,117 +181,8 @@ const itineraryData = [
     }
 ];
 
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Render Changelog
-    const changelogList = document.getElementById('changelog-list');
-    if (changelogList) {
-        changelogData.forEach(log => {
-            const logHTML = `
-                <div class="changelog-item">
-                    <div class="changelog-version">${log.version} <span class="changelog-date">(${log.date})</span></div>
-                    <ul class="changelog-desc">
-                        ${log.changes.map(c => `<li>${c}</li>`).join('')}
-                    </ul>
-                </div>
-            `;
-            changelogList.insertAdjacentHTML('beforeend', logHTML);
-        });
-    }
-
-    // 2. Render Itinerary with Timeline
-    const itineraryList = document.getElementById('itinerary-list');
-    if(itineraryList) {
-        itineraryData.forEach((dayData, index) => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.style.animationDelay = `${index * 0.1}s`;
-
-            const hotelHTML = dayData.hotelMap 
-                ? `${dayData.hotel} <a href="https://maps.google.com/?q=${dayData.hotelMap}" target="_blank" class="map-link-inline"><i class="fa-solid fa-location-dot"></i> 地圖</a>`
-                : dayData.hotel;
-
-            // Generate Timeline HTML
-            let timelineHTML = `<div class="timeline-container">`;
-            dayData.timeline.forEach(item => {
-                timelineHTML += `
-                    <div class="timeline-item">
-                        <div class="timeline-time">${item.time}</div>
-                        <div class="timeline-content">${item.desc}</div>
-                    </div>
-                `;
-            });
-            timelineHTML += `</div>`;
-
-            card.innerHTML = `
-                <div class="card-header">
-                    <span class="day-badge">${dayData.day}</span>
-                    <h3 class="theme">${dayData.theme}</h3>
-                </div>
-                <div class="card-body">
-                    <div class="info-row" style="margin-top:0;">
-                        <span class="icon"><i class="fa-solid fa-bed"></i></span>
-                        <div>
-                            <strong>住宿</strong>
-                            <p>${hotelHTML}</p>
-                        </div>
-                    </div>
-                    
-                    ${timelineHTML}
-
-                    <div class="info-row">
-                        <span class="icon"><i class="fa-solid fa-lightbulb"></i></span>
-                        <div>
-                            <strong>育兒重點與備註</strong>
-                            <p>${dayData.tips}</p>
-                        </div>
-                    </div>
-                    <div class="info-row">
-                        <span class="icon"><i class="fa-solid fa-umbrella"></i></span>
-                        <div>
-                            <strong>雨天備案</strong>
-                            <p>${dayData.rainPlan}</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-            itineraryList.appendChild(card);
-        });
-    }
-
-    // 3. Tab Switching Logic
-    const navButtons = document.querySelectorAll('.nav-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
-
-    navButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            // Remove active from all
-            navButtons.forEach(b => b.classList.remove('active'));
-            tabContents.forEach(t => t.classList.remove('active'));
-
-            // Add active to clicked
-            btn.classList.add('active');
-            const targetId = btn.getAttribute('data-target');
-            document.getElementById(targetId).classList.add('active');
-            
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-    });
-
-    // 4. Checklist LocalStorage Logic
-    const checkboxes = document.querySelectorAll('.check-list input[type="checkbox"]');
-    
-    // Load saved states
-    const savedChecklist = JSON.parse(localStorage.getItem('fukuokaChecklist')) || {};
-    checkboxes.forEach(cb => {
-        if(savedChecklist[cb.value]) {
-            cb.checked = true;
-        }
-        
-        // Save on change
-        cb.addEventListener('change', (e) => {
-            savedChecklist[e.target.value] = e.target.checked;
-            localStorage.setItem('fukuokaChecklist', JSON.stringify(savedChecklist));
-        });
-    });
-});
+// Export to window so other scripts can access them in browser environment
+window.appData = {
+    changelogData,
+    itineraryData
+};

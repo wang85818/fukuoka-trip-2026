@@ -26,29 +26,32 @@ function renderItinerary(itineraryData) {
             card.className = 'card';
             card.style.animationDelay = `${dayIndex * 0.1}s`;
 
-            const hotelHTML = dayData.hotelMap 
-                ? `${dayData.hotel} <a href="https://maps.google.com/?q=${dayData.hotelMap}" target="_blank" class="map-link-inline"><i class="fa-solid fa-location-dot"></i> 地圖</a>`
-                : dayData.hotel;
+            const hotelHTML = dayData.hotel;
 
             // Generate Timeline HTML
             let timelineHTML = `<div class="timeline-container" data-day-index="${dayIndex}">`;
             dayData.timeline.forEach((item, itemIndex) => {
+                const optimizedIcon = item.isOptimized ? '<i class="fa-solid fa-wand-magic-sparkles" style="color: #f59e0b; margin-left: 5px;" title="已最佳化"></i>' : '';
                 timelineHTML += `
-                    <div class="timeline-item" data-item-index="${itemIndex}" onclick="updateMap('${encodeURIComponent(item.desc)}')">
+                    <div class="timeline-item" data-item-index="${itemIndex}" onclick="window.mapModule.showPOI(${item.lat}, ${item.lng}, '${item.desc}')">
                         <div class="timeline-item-content">
                             <div class="timeline-time">${item.time}</div>
-                            <div class="timeline-content">${item.desc}</div>
+                            <div class="timeline-content">${item.desc} ${optimizedIcon}</div>
                         </div>
-                        <div class="drag-handle"><i class="fa-solid fa-bars"></i></div>
                     </div>
                 `;
             });
             timelineHTML += `</div>`;
 
             card.innerHTML = `
-                <div class="card-header">
-                    <span class="day-badge">${dayData.day}</span>
-                    <h3 class="theme">${dayData.theme}</h3>
+                <div class="card-header" style="display:flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span class="day-badge">${dayData.day}</span>
+                        <h3 class="theme">${dayData.theme}</h3>
+                    </div>
+                    <button class="export-btn" onclick="window.optimizeModule.optimizeDay(${dayIndex})" style="background: var(--gradient-primary); border: none; padding: 5px 10px; border-radius: 8px; color: white; cursor: pointer;">
+                        <i class="fa-solid fa-route"></i> 最佳化路線
+                    </button>
                 </div>
                 <div class="card-body">
                     <div class="info-row" style="margin-top:0;">
@@ -61,82 +64,94 @@ function renderItinerary(itineraryData) {
                     
                     ${timelineHTML}
 
-                    <div class="info-row">
-                        <span class="icon"><i class="fa-solid fa-lightbulb"></i></span>
-                        <div>
-                            <strong>育兒重點與備註</strong>
-                            <p>${dayData.tips}</p>
-                        </div>
-                    </div>
-                    <div class="info-row">
-                        <span class="icon"><i class="fa-solid fa-umbrella"></i></span>
-                        <div>
-                            <strong>雨天備案</strong>
-                            <p>${dayData.rainPlan}</p>
-                        </div>
+                    <div style="text-align: center; margin-top: 15px;">
+                        <button onclick="window.mapModule.updateRouteForDay(window.appData.itineraryData[${dayIndex}])" style="padding: 8px 15px; border-radius: 20px; border: 1px solid var(--primary-color); background: white; color: var(--primary-color); cursor: pointer; font-size: 0.9em;">
+                            <i class="fa-solid fa-map"></i> 顯示本日地圖路線
+                        </button>
                     </div>
                 </div>
             `;
             itineraryList.appendChild(card);
         });
-
-        // Initialize SortableJS for each timeline container
-        const timelines = document.querySelectorAll('.timeline-container');
-        timelines.forEach(container => {
-            Sortable.create(container, {
-                handle: '.drag-handle', // drag handle selector
-                animation: 150,
-                ghostClass: 'sortable-ghost',
-                dragClass: 'sortable-drag',
-                onEnd: function (evt) {
-                    const dayIndex = evt.to.getAttribute('data-day-index');
-                    const oldIndex = evt.oldIndex;
-                    const newIndex = evt.newIndex;
-                    
-                    if (oldIndex !== newIndex) {
-                        // Reorder data array
-                        const dayData = window.appData.itineraryData[dayIndex];
-                        const movedItem = dayData.timeline.splice(oldIndex, 1)[0];
-                        dayData.timeline.splice(newIndex, 0, movedItem);
-                        
-                        // Save to Firebase or localStorage
-                        if (window.db) {
-                            window.db.ref('itinerary').set(window.appData.itineraryData)
-                                .then(() => console.log('Saved new order to Firebase'))
-                                .catch(err => console.error('Error saving to Firebase', err));
-                        } else {
-                            localStorage.setItem('fukuokaItinerary', JSON.stringify(window.appData.itineraryData));
-                            console.log('Saved new order to localStorage');
-                        }
-                    }
-                }
-            });
-        });
     }
 }
 
-// Map Update Logic
-window.updateMap = function(query) {
-    const iframe = document.getElementById('map-iframe');
-    const mapContainer = document.getElementById('map-container');
-    
-    // Some basic parsing to remove noise from query
-    let cleanQuery = decodeURIComponent(query)
-        .replace(/出發前往|抵達|辦理入住|退房|前往/g, '')
-        .trim();
-        
-    if(cleanQuery.length === 0) return; // ignore empty
+function renderPOIs(dataToRender) {
+    const poiList = document.getElementById('poi-list');
+    if (!poiList) return;
 
-    // Update iframe source (we append ' 福岡' to give google maps better context if it's a generic name)
-    iframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(cleanQuery + " 九州")}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
+    const db = dataToRender || window.appData.poiDatabase;
+    if (!db) return;
+
+    poiList.innerHTML = '';
+    db.forEach(poi => {
+        let icon = '';
+        if (poi.category === 'attraction') icon = '<i class="fa-solid fa-camera-retro"></i>';
+        if (poi.category === 'food') icon = '<i class="fa-solid fa-utensils"></i>';
+        if (poi.category === 'hotel') icon = '<i class="fa-solid fa-bed"></i>';
+
+        // Select options for days
+        let dayOptions = '';
+        window.appData.itineraryData.forEach((day, idx) => {
+            dayOptions += `<option value="${idx}">${day.day} - ${day.theme}</option>`;
+        });
+
+        const card = document.createElement('div');
+        card.className = 'poi-card card';
+        card.innerHTML = `
+            <div class="card-body">
+                <h3 style="margin-bottom: 10px; font-size: 1.1em; font-weight: 700;">${icon} ${poi.name}</h3>
+                <p style="font-size: 0.9em; color: #64748b; margin-bottom: 15px;">${poi.desc}</p>
+                
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <select id="poi-select-${poi.id}" style="padding: 5px; border-radius: 5px; border: 1px solid #cbd5e1; flex: 1;">
+                        ${dayOptions}
+                    </select>
+                    <button onclick="addPoiToItinerary('${poi.id}')" style="background: var(--primary-color); color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer;">
+                        <i class="fa-solid fa-plus"></i> 加入
+                    </button>
+                    <button onclick="window.mapModule.showPOI(${poi.lat}, ${poi.lng}, '${poi.name}')" style="background: #e2e8f0; color: #475569; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer;">
+                        地圖
+                    </button>
+                </div>
+            </div>
+        `;
+        poiList.appendChild(card);
+    });
+}
+
+window.addPoiToItinerary = function(poiId) {
+    const poi = window.appData.poiDatabase.find(p => p.id === poiId);
+    if (!poi) return;
+
+    const selectEl = document.getElementById(`poi-select-${poiId}`);
+    const dayIndex = parseInt(selectEl.value);
+
+    if (isNaN(dayIndex) || !window.appData.itineraryData[dayIndex]) return;
+
+    // Add to timeline
+    window.appData.itineraryData[dayIndex].timeline.push({
+        id: "t_new_" + Date.now(),
+        time: "--:--",
+        desc: poi.name,
+        lat: poi.lat,
+        lng: poi.lng,
+        isOptimized: false
+    });
+
+    // Save
+    localStorage.setItem('fukuokaItinerary', JSON.stringify(window.appData.itineraryData));
     
-    // Show modal on mobile
-    if(window.innerWidth < 768) {
-        mapContainer.classList.add('active');
-    }
+    // Re-render
+    renderItinerary(window.appData.itineraryData);
+    alert(`已將 ${poi.name} 加入到 ${window.appData.itineraryData[dayIndex].day} 的行程中！`);
+    
+    // Switch to itinerary tab
+    document.querySelector('.nav-btn[data-target="tab-itinerary"]').click();
 };
 
 window.renderUI = {
     renderChangelog,
-    renderItinerary
+    renderItinerary,
+    renderPOIs
 };

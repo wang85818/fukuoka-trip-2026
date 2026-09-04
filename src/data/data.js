@@ -1,41 +1,26 @@
 const changelogData = [
     {
-        version: "v1.3.0",
+        version: "v2.0.0",
         date: "2026-09-04",
         changes: [
-            "拖拉式行程看板：可以按住行程右側的「三條線 (≡)」圖示，隨意拖曳改變景點的順序。",
-            "多人即時共編 (Real-time Collaboration)：整合 Firebase Realtime Database，任何改變都會在一秒內即時同步給所有旅伴！"
-        ]
-    },
-    {
-        version: "v1.2.0",
-        date: "2026-09-04",
-        changes: [
-            "專案結構化與模組化：將單一檔案拆分為前端現代化架構，為後續導入拖拉與協作功能打基礎。",
-            "將 CSS 拆分為 main, tabs, timeline 模組。",
-            "將 JavaScript 邏輯拆分為資料、渲染與主程式模組。"
-        ]
-    },
-    {
-        version: "v1.1.0",
-        date: "2026-09-04",
-        changes: [
-            "版面大幅升級：將首頁的每日行程改為「時間軸 (Timeline)」設計。",
-            "行程擴充：為 9/24 加入了「九州自然動物公園」與「由布院半日遊」。",
-            "新增更新日誌區塊，方便追蹤修改紀錄。",
-            "修復舊版快取導致的版面跑版問題。"
-        ]
-    },
-    {
-        version: "v1.0.0",
-        date: "2026-09-04",
-        changes: [
-            "第一版網站上線，包含基本的九天行程卡片。",
-            "新增底部導覽列，支援四大頁籤切換。",
-            "加入互動式行李清單功能 (支援記憶功能)。",
-            "整合 Giscus 留言板。"
+            "地圖引擎升級：導入 Leaflet.js 與 OSRM，全面實現開源免費的互動式路線地圖。",
+            "智慧路線優化：一鍵根據地理位置重新排序行程，並自動計算車程時間。",
+            "景點庫 (POI) 系統：內建精選福岡景點，點擊即可輕鬆加入行程中。"
         ]
     }
+];
+
+const poiDatabase = [
+    { id: "p1", name: "福岡塔 (Fukuoka Tower)", category: "attraction", lat: 33.5933, lng: 130.3515, desc: "福岡地標，海濱百道海濱公園旁。" },
+    { id: "p2", name: "太宰府天滿宮", category: "attraction", lat: 33.5215, lng: 130.5349, desc: "祈求學業順利的著名神社，參道有許多美食。" },
+    { id: "p3", name: "博多運河城 (Canal City)", category: "attraction", lat: 33.5898, lng: 130.4107, desc: "大型複合式購物中心，定時有水舞秀。" },
+    { id: "p4", name: "大濠公園", category: "attraction", lat: 33.5861, lng: 130.3768, desc: "廣大的市區水景公園，非常適合散步與兒童放電。" },
+    { id: "p5", name: "一蘭拉麵 本社總本店", category: "food", lat: 33.5932, lng: 130.4046, desc: "來福岡必吃的知名豚骨拉麵總店。" },
+    { id: "p6", name: "中洲屋台街", category: "food", lat: 33.5912, lng: 130.4072, desc: "體驗福岡道地夜晚路邊攤文化的最佳去處。" },
+    { id: "p7", name: "Shin-Shin 拉麵 (天神本店)", category: "food", lat: 33.5925, lng: 130.3980, desc: "極細麵與濃厚不膩的豚骨湯頭，深受在地人喜愛。" },
+    { id: "p8", name: "EN HOTEL Hakata", category: "hotel", lat: 33.5901, lng: 130.4132, desc: "博多市區高CP值住宿。" },
+    { id: "p9", name: "THE BASICS FUKUOKA", category: "hotel", lat: 33.5888, lng: 130.4283, desc: "極具設計感的奢華圖書館風格飯店。" },
+    { id: "p10", name: "福岡機場 (FUK)", category: "attraction", lat: 33.5859, lng: 130.4496, desc: "九州最大的國際機場。" }
 ];
 
 const itineraryData = [
@@ -43,154 +28,98 @@ const itineraryData = [
         day: "9/19 (六)",
         theme: "✈️ 飛行抵達",
         hotel: "EN HOTEL Hakata",
-        hotelMap: "EN+HOTEL+Hakata",
         timeline: [
-            { time: "07:30", desc: "桃園機場 (T2) 起飛 (BR102)" },
-            { time: "10:55", desc: "抵達福岡機場，處理入境與小孩餐點" },
-            { time: "14:00", desc: "前往飯店寄放行李 / 入住" },
-            { time: "16:00", desc: "天神地下街逛街" },
-            { time: "18:00", desc: "🍽️ 晚餐：中洲屋台宵夜 / 附近餐廳" },
-            { time: "20:00", desc: "返回飯店休息 (晚間抵達降低強度)" }
-        ],
-        tips: "機場先處理奶量與小孩餐點。",
-        rainPlan: "室內行程不受影響"
+            { id: "t1_1", time: "10:55", desc: "福岡機場 (FUK)", lat: 33.5859, lng: 130.4496, isOptimized: false },
+            { id: "t1_2", time: "14:00", desc: "EN HOTEL Hakata", lat: 33.5901, lng: 130.4132, isOptimized: false },
+            { id: "t1_3", time: "16:00", desc: "天神地下街", lat: 33.5906, lng: 130.3986, isOptimized: false },
+            { id: "t1_4", time: "18:00", desc: "中洲屋台街", lat: 33.5912, lng: 130.4072, isOptimized: false }
+        ]
     },
     {
         day: "9/20 (日)",
         theme: "⛩️ 太宰府與柳川",
         hotel: "EN HOTEL Hakata",
-        hotelMap: "EN+HOTEL+Hakata",
         timeline: [
-            { time: "08:00", desc: "🍽️ 早餐：飯店或附近超商" },
-            { time: "09:30", desc: "太宰府天滿宮、參道散步" },
-            { time: "12:30", desc: "🍽️ 午餐：太宰府周邊" },
-            { time: "14:00", desc: "柳川川下り遊船" },
-            { time: "17:30", desc: "返回博多車站" },
-            { time: "18:30", desc: "🍽️ 晚餐：博多站周邊" }
-        ],
-        tips: "依小孩體力隨時縮短行程；推車避開參道人潮高峰。",
-        rainPlan: "改去 Canal City 或 LaLaport 商場"
+            { id: "t2_1", time: "09:30", desc: "太宰府天滿宮", lat: 33.5215, lng: 130.5349, isOptimized: false },
+            { id: "t2_2", time: "14:00", desc: "柳川遊船", lat: 33.1610, lng: 130.4023, isOptimized: false },
+            { id: "t2_3", time: "18:30", desc: "博多車站", lat: 33.5897, lng: 130.4207, isOptimized: false }
+        ]
     },
     {
         day: "9/21 (一)",
         theme: "🛍️ 市區輕遊換房",
         hotel: "THE BASICS",
-        hotelMap: "THE+BASICS+FUKUOKA",
         timeline: [
-            { time: "09:00", desc: "EN HOTEL 退房，前往 THE BASICS 寄放行李" },
-            { time: "11:30", desc: "🍽️ 午餐：人形町今半" },
-            { time: "13:30", desc: "博多運河城逛街避暑" },
-            { time: "16:00", desc: "大濠公園散步 (若人多提早回飯店)" },
-            { time: "18:00", desc: "🍽️ 晚餐：大濠公園周邊或博多" },
-            { time: "20:00", desc: "THE BASICS 入住休息" }
-        ],
-        tips: "下午以室內避暑為主。",
-        rainPlan: "改往福岡市美術館或周邊咖啡廳"
+            { id: "t3_1", time: "09:00", desc: "EN HOTEL Hakata", lat: 33.5901, lng: 130.4132, isOptimized: false },
+            { id: "t3_2", time: "10:00", desc: "THE BASICS FUKUOKA", lat: 33.5888, lng: 130.4283, isOptimized: false },
+            { id: "t3_3", time: "11:30", desc: "人形町今半 (博多)", lat: 33.5898, lng: 130.4190, isOptimized: false },
+            { id: "t3_4", time: "13:30", desc: "博多運河城 (Canal City)", lat: 33.5898, lng: 130.4107, isOptimized: false },
+            { id: "t3_5", time: "16:00", desc: "大濠公園", lat: 33.5861, lng: 130.3768, isOptimized: false }
+        ]
     },
     {
         day: "9/22 (二)",
         theme: "🌷 豪斯登堡",
         hotel: "THE BASICS",
-        hotelMap: "THE+BASICS+FUKUOKA",
         timeline: [
-            { time: "08:00", desc: "搭乘 JR 特急前往豪斯登堡" },
-            { time: "10:00", desc: "豪斯登堡 (主題區/遊船/米飛兔)" },
-            { time: "12:30", desc: "🍽️ 午餐：園區內餐廳" },
-            { time: "14:00", desc: "繼續遊玩豪斯登堡" },
-            { time: "17:30", desc: "傍晚搭乘 JR 返回博多" },
-            { time: "19:30", desc: "🍽️ 晚餐：博多車站周邊" }
-        ],
-        tips: "園區廣大，多利用室內休息區與推車；控制步行量。",
-        rainPlan: "園區內有眾多室內設施與商場"
+            { id: "t4_1", time: "08:00", desc: "博多車站", lat: 33.5897, lng: 130.4207, isOptimized: false },
+            { id: "t4_2", time: "10:00", desc: "豪斯登堡", lat: 33.0863, lng: 129.7892, isOptimized: false }
+        ]
     },
     {
         day: "9/23 (三)",
-        theme: "♨️ 前往大分 (別府地獄溫泉)",
-        hotel: "神和苑 (Kannawaen)",
-        hotelMap: "別府+神和苑",
+        theme: "♨️ 別府地獄溫泉",
+        hotel: "神和苑",
         timeline: [
-            { time: "07:00", desc: "🍽️ 早餐：The Basic" },
-            { time: "09:00", desc: "The Basic 退房" },
-            { time: "10:00", desc: "出發移動至大分縣" },
-            { time: "13:00", desc: "神和苑 Check in" },
-            { time: "14:00", desc: "地獄蒸工房 (午餐/點心)" },
-            { time: "15:00", desc: "血池地獄" },
-            { time: "16:00", desc: "海地獄" },
-            { time: "18:00", desc: "🍽️ 晚餐：回神和苑吃晚餐" },
-            { time: "19:00", desc: "自由時間 / 休息泡湯" }
-        ],
-        tips: "車程較長，需備妥車上安撫物品；溫泉區移動注意嬰兒車與安全。",
-        rainPlan: "提早入住神和苑享受館內溫泉設施與休息"
+            { id: "t5_1", time: "09:00", desc: "THE BASICS FUKUOKA", lat: 33.5888, lng: 130.4283, isOptimized: false },
+            { id: "t5_2", time: "13:00", desc: "神和苑", lat: 33.3159, lng: 131.4727, isOptimized: false },
+            { id: "t5_3", time: "14:00", desc: "地獄蒸工房", lat: 33.3146, lng: 131.4756, isOptimized: false },
+            { id: "t5_4", time: "15:00", desc: "血池地獄", lat: 33.3275, lng: 131.4880, isOptimized: false },
+            { id: "t5_5", time: "16:00", desc: "海地獄", lat: 33.3155, lng: 131.4715, isOptimized: false }
+        ]
     },
     {
         day: "9/24 (四)",
         theme: "🦒 九州動物園與由布院",
-        hotel: "神和苑 (Kannawaen)",
-        hotelMap: "別府+神和苑",
+        hotel: "神和苑",
         timeline: [
-            { time: "07:00", desc: "🍽️ 早餐：神和苑" },
-            { time: "08:00", desc: "前往九州自然動物公園 (African Safari)" },
-            { time: "09:00", desc: "動物園遊玩 (叢林巴士餵食體驗)" },
-            { time: "12:30", desc: "🍽️ 午餐：動物園內或周邊餐廳" },
-            { time: "14:00", desc: "前往由布院散步 (湯之坪街道、金鱗湖)" },
-            { time: "17:00", desc: "返回神和苑" },
-            { time: "18:00", desc: "🍽️ 晚餐：回神和苑吃晚餐" },
-            { time: "19:00", desc: "自由時間 / 休息泡湯" }
-        ],
-        tips: "叢林巴士非常受小朋友歡迎，建議提前預約。",
-        rainPlan: "改為參觀九州大分海洋宮殿水族館 (海之卵)"
+            { id: "t6_1", time: "08:00", desc: "神和苑", lat: 33.3159, lng: 131.4727, isOptimized: false },
+            { id: "t6_2", time: "09:00", desc: "九州自然動物公園", lat: 33.3512, lng: 131.3916, isOptimized: false },
+            { id: "t6_3", time: "14:00", desc: "由布院 (金鱗湖)", lat: 33.2662, lng: 131.3683, isOptimized: false }
+        ]
     },
     {
         day: "9/25 (五)",
         theme: "🐬 海之中道",
         hotel: "THE LUIGANS",
-        hotelMap: "THE+LUIGANS+Spa+and+Resort",
         timeline: [
-            { time: "08:30", desc: "🍽️ 早餐：飯店退房並移動回博多" },
-            { time: "11:30", desc: "博多車站轉乘 JR 前往海之中道" },
-            { time: "12:30", desc: "🍽️ 午餐：建議在博多站內先買齊帶去" },
-            { time: "13:30", desc: "Marine World 水族館 / 海之中道海濱公園" },
-            { time: "17:00", desc: "入住 THE LUIGANS 度假村" },
-            { time: "18:30", desc: "🍽️ 晚餐：度假村內或周邊" }
-        ],
-        tips: "交通轉乘次數較多，注意行李搬運。",
-        rainPlan: "水族館為室內行程，留意轉車雨具即可"
+            { id: "t7_1", time: "08:30", desc: "神和苑", lat: 33.3159, lng: 131.4727, isOptimized: false },
+            { id: "t7_2", time: "13:30", desc: "海之中道海洋生態科學館", lat: 33.6627, lng: 130.3204, isOptimized: false },
+            { id: "t7_3", time: "17:00", desc: "THE LUIGANS Spa and Resort", lat: 33.6609, lng: 130.3168, isOptimized: false }
+        ]
     },
     {
         day: "9/26 (六)",
         theme: "🏖️ 海島度假",
         hotel: "THE LUIGANS",
-        hotelMap: "THE+LUIGANS+Spa+and+Resort",
         timeline: [
-            { time: "09:00", desc: "🍽️ 早餐：飯店早餐" },
-            { time: "10:30", desc: "志賀島海岸散步" },
-            { time: "12:30", desc: "🍽️ 午餐：度假村周邊" },
-            { time: "14:00", desc: "度假村泳池 / SPA 放鬆" },
-            { time: "17:00", desc: "海邊看夕陽" },
-            { time: "18:30", desc: "🍽️ 晚餐：度假村最後的晚餐" }
-        ],
-        tips: "全日低強度放鬆，減少通勤，以飯店接駁或計程車為主。",
-        rainPlan: "轉為飯店內設施與 SPA 放鬆"
+            { id: "t8_1", time: "10:30", desc: "志賀島", lat: 33.6653, lng: 130.3015, isOptimized: false },
+            { id: "t8_2", time: "14:00", desc: "THE LUIGANS Spa and Resort", lat: 33.6609, lng: 130.3168, isOptimized: false }
+        ]
     },
     {
         day: "9/27 (日)",
         theme: "✈️ 滿載而歸",
         hotel: "溫暖的家",
-        hotelMap: "",
         timeline: [
-            { time: "07:00", desc: "🍽️ 早餐：早班機，早餐後即退房" },
-            { time: "08:00", desc: "前往福岡機場" },
-            { time: "09:30", desc: "機場報到 / 安檢 / 處理退稅" },
-            { time: "12:20", desc: "起飛 (BR105)" },
-            { time: "13:45", desc: "抵達台灣桃園機場，回到溫暖的家" }
-        ],
-        tips: "預留充分時間處理退稅與嬰兒車托運。",
-        rainPlan: "室內行程不受影響"
+            { id: "t9_1", time: "08:00", desc: "THE LUIGANS Spa and Resort", lat: 33.6609, lng: 130.3168, isOptimized: false },
+            { id: "t9_2", time: "09:30", desc: "福岡機場 (FUK)", lat: 33.5859, lng: 130.4496, isOptimized: false }
+        ]
     }
 ];
 
-// Export to window so other scripts can access them in browser environment
 window.appData = {
     changelogData,
+    poiDatabase,
     itineraryData
 };

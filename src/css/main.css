@@ -163,3 +163,45 @@ body {
         font-size: 1.6rem;
     }
 }
+
+/* =========================================
+   POI Database Styles
+   ========================================= */
+.poi-filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+}
+
+.poi-filter-btn {
+    padding: 6px 15px;
+    border: 1px solid var(--primary-color);
+    background: white;
+    color: var(--primary-color);
+    border-radius: 20px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+
+.poi-filter-btn.active, .poi-filter-btn:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.poi-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.poi-card {
+    padding: 15px;
+}
+
+/* Ensure Leaflet controls are above */
+.leaflet-container {
+    z-index: 1;
+}

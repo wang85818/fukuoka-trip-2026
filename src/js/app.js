@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Initial Data & Firebase Sync
     
-    function fallbackToLocal() {
+    // 1. Initial Data Load
+    function loadItinerary() {
         const savedItinerary = localStorage.getItem('fukuokaItinerary');
         if (savedItinerary) {
             try {
@@ -17,38 +18,23 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch(e) {
                 console.error("Error parsing saved itinerary", e);
             }
+        } else {
+            // First time setup: push local default data to localStorage
+            localStorage.setItem('fukuokaItinerary', JSON.stringify(window.appData.itineraryData));
         }
         window.renderUI.renderItinerary(window.appData.itineraryData);
+        window.renderUI.renderPOIs(); // Render the new POI Database
+        
+        // Initialize Map after rendering itinerary
+        setTimeout(() => {
+            if(window.mapModule && window.appData.itineraryData.length > 0) {
+                window.mapModule.initMap();
+                window.mapModule.updateRouteForDay(window.appData.itineraryData[0]); // Draw route for day 1 by default
+            }
+        }, 300);
     }
 
-    // Always render local data immediately so the UI is never blank
-    fallbackToLocal();
-
-    if (window.db) {
-        try {
-            const itineraryRef = window.db.ref('itinerary');
-            
-            // Listen for real-time updates from Firebase
-            itineraryRef.on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    // Use cloud data
-                    window.appData.itineraryData = data;
-                    window.renderUI.renderItinerary(window.appData.itineraryData);
-                } else {
-                    // First time setup: push local default data to cloud
-                    itineraryRef.set(window.appData.itineraryData).catch(err => {
-                        console.warn("Could not push default data. Firebase might be read-only or not created.", err);
-                    });
-                }
-            }, (error) => {
-                console.warn("Firebase permission or config error:", error);
-                // We already rendered local, so just log warning
-            });
-        } catch (error) {
-            console.warn("Firebase DB error:", error);
-        }
-    }
+    loadItinerary();
 
     // 2. Tab Switching Logic
     const navButtons = document.querySelectorAll('.top-nav .nav-btn');
@@ -115,6 +101,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error("PDF Export failed", err);
                 exportBtn.innerHTML = '<i class="fa-solid fa-file-pdf"></i> 匯出失敗';
                 exportBtn.disabled = false;
+            });
+        });
+    }
+    
+    // 5. POI Filter Logic
+    const poiFilterBtns = document.querySelectorAll('.poi-filter-btn');
+    if (poiFilterBtns.length > 0) {
+        poiFilterBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // Update active state
+                poiFilterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const filterValue = btn.getAttribute('data-filter');
+                
+                // Re-render based on filter
+                const filteredData = window.appData.poiDatabase.filter(poi => 
+                    filterValue === 'all' ? true : poi.category === filterValue
+                );
+                
+                window.renderUI.renderPOIs(filteredData);
             });
         });
     }

@@ -12,17 +12,12 @@
     <!-- Modular CSS -->
     <link rel="stylesheet" href="src/css/main.css?v=8">
     <link rel="stylesheet" href="src/css/tabs.css?v=8">
-    <link rel="stylesheet" href="src/css/timeline.css?v=8">
-
-    <!-- Firebase Compat SDK -->
-    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
-
     <!-- html2pdf for Exporting -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-    <!-- SortableJS for Drag and Drop -->
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <!-- Leaflet for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
     <div class="split-layout">
@@ -44,6 +39,10 @@
                     <button class="nav-btn active" data-target="tab-itinerary">
                         <i class="fa-solid fa-route"></i>
                         <span>行程表</span>
+                    </button>
+                    <button class="nav-btn" data-target="tab-poi">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                        <span>景點庫</span>
                     </button>
                     <button class="nav-btn" data-target="tab-checklist">
                         <i class="fa-solid fa-list-check"></i>
@@ -72,7 +71,26 @@
                     </div>
                 </section>
 
-                <!-- TAB 2: 行李清單 -->
+                <!-- TAB 2: 景點庫 -->
+                <section id="tab-poi" class="tab-content">
+                    <div class="section-header">
+                        <h2><i class="fa-solid fa-map-location-dot"></i> 景點與美食資料庫</h2>
+                        <p class="section-subtitle">點擊「加入行程」將地點安排到您的旅程中</p>
+                    </div>
+                    
+                    <div class="poi-filters">
+                        <button class="poi-filter-btn active" data-filter="all">全部</button>
+                        <button class="poi-filter-btn" data-filter="attraction">景點</button>
+                        <button class="poi-filter-btn" data-filter="food">美食</button>
+                        <button class="poi-filter-btn" data-filter="hotel">飯店</button>
+                    </div>
+
+                    <div id="poi-list" class="poi-list">
+                        <!-- POI Cards dynamically inserted here -->
+                    </div>
+                </section>
+
+                <!-- TAB 3: 行李清單 -->
                 <section id="tab-checklist" class="tab-content">
                     <div class="section-header">
                         <h2><i class="fa-solid fa-suitcase-rolling"></i> 專屬行李清單</h2>
@@ -120,7 +138,7 @@
                     </div>
                 </section>
 
-                <!-- TAB 3: 實用資訊 -->
+                <!-- TAB 4: 實用資訊 -->
                 <section id="tab-info" class="tab-content">
                     <div class="section-header">
                         <h2><i class="fa-solid fa-circle-info"></i> 實用資訊</h2>
@@ -185,7 +203,7 @@
                     </div>
                 </section>
 
-                <!-- TAB 4: 討論區 -->
+                <!-- TAB 5: 討論區 -->
                 <section id="tab-discussion" class="tab-content">
                     <div class="section-header">
                         <h2><i class="fa-regular fa-comments"></i> 行程討論區</h2>
@@ -220,17 +238,15 @@
             <button class="close-map-btn" onclick="document.getElementById('map-container').classList.remove('active')">
                 <i class="fa-solid fa-xmark"></i> 關閉地圖
             </button>
-            <iframe id="map-iframe" 
-                src="https://maps.google.com/maps?q=福岡機場&t=&z=13&ie=UTF8&iwloc=&output=embed" 
-                width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0">
-            </iframe>
+            <div id="map" style="width: 100%; height: 100%; border-radius: 0;"></div>
         </div>
     </div>
     
     <!-- Modular JavaScript -->
-    <script src="src/data/data.js?v=9"></script>
-    <script src="src/js/firebaseConfig.js?v=9"></script>
-    <script src="src/js/render.js?v=9"></script>
-    <script src="src/js/app.js?v=9"></script>
+    <script src="src/data/data.js?v=10"></script>
+    <script src="src/js/map.js?v=10"></script>
+    <script src="src/js/optimize.js?v=10"></script>
+    <script src="src/js/render.js?v=10"></script>
+    <script src="src/js/app.js?v=10"></script>
 </body>
 </html>

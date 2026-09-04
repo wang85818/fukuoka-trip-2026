@@ -43,12 +43,18 @@ body {
     flex-direction: column;
     position: relative;
     background: var(--bg-color);
+}
+
+.content-area {
+    flex: 1;
+    overflow-y: auto;
     padding: 20px;
+    padding-bottom: calc(var(--nav-height) + 20px);
 }
 
 .map-container {
     display: none; /* hidden on mobile by default */
-    flex: 1;
+    flex: 1.5; /* Default map size ratio on desktop */
     height: 100vh;
     position: relative;
     background: #e2e8f0;
@@ -73,7 +79,8 @@ body {
 /* Desktop & Tablet Split View */
 @media (min-width: 768px) {
     .app-container {
-        max-width: 500px;
+        flex: 0 0 450px; /* Fixed width for the list */
+        max-width: 450px;
         box-shadow: 2px 0 15px rgba(0,0,0,0.1);
         z-index: 2;
     }

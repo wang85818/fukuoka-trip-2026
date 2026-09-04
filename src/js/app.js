@@ -8,24 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 2. Initial Data & Firebase Sync
-    if (window.db) {
-        const itineraryRef = window.db.ref('itinerary');
-        
-        // Listen for real-time updates from Firebase
-        itineraryRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                // Use cloud data
-                window.appData.itineraryData = data;
-                window.renderUI.renderItinerary(window.appData.itineraryData);
-            } else {
-                // First time setup: push local default data to cloud
-                itineraryRef.set(window.appData.itineraryData);
-                window.renderUI.renderItinerary(window.appData.itineraryData);
-            }
-        });
-    } else {
-        // Fallback to localStorage
+    
+    function fallbackToLocal() {
         const savedItinerary = localStorage.getItem('fukuokaItinerary');
         if (savedItinerary) {
             try {
@@ -35,6 +19,34 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         window.renderUI.renderItinerary(window.appData.itineraryData);
+    }
+
+    if (window.db) {
+        try {
+            const itineraryRef = window.db.ref('itinerary');
+            
+            // Listen for real-time updates from Firebase
+            itineraryRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    // Use cloud data
+                    window.appData.itineraryData = data;
+                    window.renderUI.renderItinerary(window.appData.itineraryData);
+                } else {
+                    // First time setup: push local default data to cloud
+                    itineraryRef.set(window.appData.itineraryData);
+                    window.renderUI.renderItinerary(window.appData.itineraryData);
+                }
+            }, (error) => {
+                console.error("Firebase permission or config error:", error);
+                fallbackToLocal();
+            });
+        } catch (error) {
+            console.error("Firebase DB error:", error);
+            fallbackToLocal();
+        }
+    } else {
+        fallbackToLocal();
     }
 
     // 2. Tab Switching Logic

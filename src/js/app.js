@@ -51,39 +51,72 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 2. Tab Switching Logic
-    const navButtons = document.querySelectorAll('.nav-btn');
+    const navButtons = document.querySelectorAll('.top-nav .nav-btn');
     const tabContents = document.querySelectorAll('.tab-content');
 
     navButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-            // Remove active from all
+            // Remove active class from all
             navButtons.forEach(b => b.classList.remove('active'));
             tabContents.forEach(t => t.classList.remove('active'));
-
-            // Add active to clicked
+            
+            // Add active class to clicked
             btn.classList.add('active');
             const targetId = btn.getAttribute('data-target');
             document.getElementById(targetId).classList.add('active');
-            
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     });
 
-    // 3. Checklist LocalStorage Logic
+    // 3. Checklist Persistence
     const checkboxes = document.querySelectorAll('.check-list input[type="checkbox"]');
     
-    // Load saved states
-    const savedChecklist = JSON.parse(localStorage.getItem('fukuokaChecklist')) || {};
-    checkboxes.forEach(cb => {
-        if(savedChecklist[cb.value]) {
-            cb.checked = true;
-        }
-        
-        // Save on change
-        cb.addEventListener('change', (e) => {
-            savedChecklist[e.target.value] = e.target.checked;
-            localStorage.setItem('fukuokaChecklist', JSON.stringify(savedChecklist));
+    function loadChecklist() {
+        const saved = JSON.parse(localStorage.getItem('fukuokaChecklist') || '{}');
+        checkboxes.forEach(cb => {
+            if (saved[cb.value]) cb.checked = true;
         });
+    }
+
+    function saveChecklist() {
+        const state = {};
+        checkboxes.forEach(cb => {
+            state[cb.value] = cb.checked;
+        });
+        localStorage.setItem('fukuokaChecklist', JSON.stringify(state));
+    }
+
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', saveChecklist);
     });
+    
+    loadChecklist();
+
+    // 4. Export PDF Logic
+    const exportBtn = document.getElementById('export-pdf-btn');
+    if (exportBtn) {
+        exportBtn.addEventListener('click', () => {
+            exportBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 匯出中...';
+            exportBtn.disabled = true;
+
+            const element = document.getElementById('itinerary-list');
+            const opt = {
+                margin:       10,
+                filename:     '2026_福岡親子旅遊_行程表.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Use html2pdf
+            html2pdf().set(opt).from(element).save().then(() => {
+                exportBtn.innerHTML = '<i class="fa-solid fa-file-pdf"></i> 匯出 PDF';
+                exportBtn.disabled = false;
+            }).catch(err => {
+                console.error("PDF Export failed", err);
+                exportBtn.innerHTML = '<i class="fa-solid fa-file-pdf"></i> 匯出失敗';
+                exportBtn.disabled = false;
+            });
+        });
+    }
+
 });

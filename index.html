@@ -18,6 +18,9 @@
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-database-compat.js"></script>
 
+    <!-- html2pdf for Exporting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <!-- SortableJS for Drag and Drop -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 </head>
@@ -36,10 +39,33 @@
                     <div class="hero-overlay"></div>
                 </header>
                 
+                <!-- Top Navigation Bar -->
+                <nav class="top-nav">
+                    <button class="nav-btn active" data-target="tab-itinerary">
+                        <i class="fa-solid fa-route"></i>
+                        <span>行程表</span>
+                    </button>
+                    <button class="nav-btn" data-target="tab-checklist">
+                        <i class="fa-solid fa-list-check"></i>
+                        <span>清單</span>
+                    </button>
+                    <button class="nav-btn" data-target="tab-info">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <span>資訊</span>
+                    </button>
+                    <button class="nav-btn" data-target="tab-discussion">
+                        <i class="fa-solid fa-comments"></i>
+                        <span>討論</span>
+                    </button>
+                </nav>
+
                 <!-- TAB 1: 行程表 -->
                 <section id="tab-itinerary" class="tab-content active">
-                    <div class="section-header">
+                    <div class="section-header" style="display: flex; justify-content: space-between; align-items: center;">
                         <h2><i class="fa-regular fa-calendar-days"></i> 每日行程</h2>
+                        <button id="export-pdf-btn" class="action-btn" style="padding: 8px 15px; font-size: 0.9rem;">
+                            <i class="fa-solid fa-file-pdf"></i> 匯出 PDF
+                        </button>
                     </div>
                     <div id="itinerary-list" class="itinerary-list">
                         <!-- Cards dynamically inserted here -->
@@ -187,26 +213,6 @@
                 </section>
 
             </main>
-            
-            <!-- Bottom Navigation Bar -->
-            <nav class="bottom-nav">
-                <button class="nav-btn active" data-target="tab-itinerary">
-                    <i class="fa-solid fa-route"></i>
-                    <span>行程表</span>
-                </button>
-                <button class="nav-btn" data-target="tab-checklist">
-                    <i class="fa-solid fa-list-check"></i>
-                    <span>清單</span>
-                </button>
-                <button class="nav-btn" data-target="tab-info">
-                    <i class="fa-solid fa-circle-info"></i>
-                    <span>資訊</span>
-                </button>
-                <button class="nav-btn" data-target="tab-discussion">
-                    <i class="fa-solid fa-comments"></i>
-                    <span>討論</span>
-                </button>
-            </nav>
         </div>
 
         <!-- Map Container -->
@@ -222,9 +228,9 @@
     </div>
     
     <!-- Modular JavaScript -->
-    <script src="src/data/data.js?v=8"></script>
-    <script src="src/js/firebaseConfig.js?v=8"></script>
-    <script src="src/js/render.js?v=8"></script>
-    <script src="src/js/app.js?v=8"></script>
+    <script src="src/data/data.js?v=9"></script>
+    <script src="src/js/firebaseConfig.js?v=9"></script>
+    <script src="src/js/render.js?v=9"></script>
+    <script src="src/js/app.js?v=9"></script>
 </body>
 </html>

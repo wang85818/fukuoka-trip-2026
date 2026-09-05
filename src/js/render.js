@@ -264,5 +264,32 @@ window.renderUI = {
             `;
         });
         container.innerHTML = html;
+    },
+    renderSharedExpenses: function(data) {
+        const container = document.getElementById('shared-container');
+        if (!container) return;
+        
+        if (!data || data.length === 0) {
+            container.innerHTML = '<div style="text-align: center; padding: 30px; color: #9ca3af;">目前沒有公費紀錄。</div>';
+            return;
+        }
+
+        let html = '';
+        data.forEach((item, idx) => {
+            html += `
+                <div class="info-card" style="margin-bottom: 12px; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid #16a34a;">
+                    <div style="flex: 1;">
+                        <div style="font-weight: bold; font-size: 1.1rem; color: #1e293b;">${item.name}</div>
+                    </div>
+                    <div style="font-weight: bold; color: #166534; font-size: 1.1rem; margin-right: 15px;">
+                        ￥${item.amount.toLocaleString()}
+                    </div>
+                    <button class="action-btn shared-del-btn" data-idx="${idx}" style="background: none; border: none; color: #ef4444; padding: 5px; box-shadow: none;">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
     }
 };

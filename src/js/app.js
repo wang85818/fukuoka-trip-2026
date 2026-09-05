@@ -87,11 +87,20 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch(e) {}
         }
 
+        // Shared Expense Data Loading
+        const savedShared = localStorage.getItem('fukuokaSharedExpenses');
+        if (savedShared) {
+            try {
+                window.appData.sharedExpenseData = JSON.parse(savedShared);
+            } catch(e) {}
+        }
+
         window.renderUI.renderItinerary(window.appData.itineraryData);
         window.renderUI.renderPOIs(); 
         window.renderUI.renderChecklist(window.appData.checklistData);
         window.renderUI.renderShoppingList(window.appData.shoppingListData);
         if(window.renderUI.renderReservations) window.renderUI.renderReservations(window.appData.reservationData);
+        if(window.renderUI.renderSharedExpenses) window.renderUI.renderSharedExpenses(window.appData.sharedExpenseData);
         if(window.updateShoppingTotal) window.updateShoppingTotal();
         
         // Initialize Map after rendering itinerary
@@ -383,6 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 11. Shopping List Logic
     window.updateShoppingTotal = function() {
+        // Shopping
         let totalJpy = 0;
         window.appData.shoppingListData.forEach(item => {
             totalJpy += item.qty * item.price;
@@ -392,6 +402,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const twdEl = document.getElementById('shop-total-twd');
         if (jpyEl) jpyEl.textContent = `￥ ${totalJpy.toLocaleString()}`;
         if (twdEl) twdEl.textContent = `約 NT$ ${totalTwd.toLocaleString()}`;
+
+        // Shared Expenses
+        let sharedJpy = 0;
+        window.appData.sharedExpenseData.forEach(item => {
+            sharedJpy += item.amount;
+        });
+        const sharedTwd = Math.round(sharedJpy * currentRate);
+        const sJpyEl = document.getElementById('shared-total-jpy');
+        const sTwdEl = document.getElementById('shared-total-twd');
+        if (sJpyEl) sJpyEl.textContent = `￥ ${sharedJpy.toLocaleString()}`;
+        if (sTwdEl) sTwdEl.textContent = `約 NT$ ${sharedTwd.toLocaleString()}`;
     };
 
     const shopAddBtn = document.getElementById('shop-add-btn');
@@ -502,6 +523,124 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // 13. Shared Expenses Logic
+    const sharedAddBtn = document.getElementById('shared-add-btn');
+    if (sharedAddBtn) {
+        sharedAddBtn.addEventListener('click', () => {
+            const name = document.getElementById('shared-name').value.trim();
+            const amount = parseInt(document.getElementById('shared-amount').value) || 0;
+            
+            if (!name || amount <= 0) {
+                alert("請輸入有效的項目名稱與金額！");
+                return;
+            }
+            
+            window.appData.sharedExpenseData.push({ name, amount });
+            
+            localStorage.setItem('fukuokaSharedExpenses', JSON.stringify(window.appData.sharedExpenseData));
+            window.renderUI.renderSharedExpenses(window.appData.sharedExpenseData);
+            if (window.updateShoppingTotal) window.updateShoppingTotal(); // reuse same update logic if we hook into it
+            
+            document.getElementById('shared-name').value = '';
+            document.getElementById('shared-amount').value = '';
+        });
+    }
+
+    const sharedContainer = document.getElementById('shared-container');
+    if (sharedContainer) {
+        sharedContainer.addEventListener('click', (e) => {
+            const delBtn = e.target.closest('.shared-del-btn');
+            if (delBtn) {
+                const idx = delBtn.getAttribute('data-idx');
+                if(confirm("確定要刪除這筆公費嗎？")) {
+                    window.appData.sharedExpenseData.splice(idx, 1);
+                    localStorage.setItem('fukuokaSharedExpenses', JSON.stringify(window.appData.sharedExpenseData));
+                    window.renderUI.renderSharedExpenses(window.appData.sharedExpenseData);
+                    if (window.updateShoppingTotal) window.updateShoppingTotal();
+                }
+            }
+        });
+    }
+
+    // 14. VJW Copy Logic
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const textToCopy = e.currentTarget.getAttribute('data-copy');
+            if(navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    const originalHTML = e.currentTarget.innerHTML;
+                    e.currentTarget.innerHTML = '<i class="fa-solid fa-check" style="color:#10b981;"></i>';
+                    setTimeout(() => e.currentTarget.innerHTML = originalHTML, 2000);
+                });
+            } else {
+                // Fallback
+                const textArea = document.createElement("textarea");
+                textArea.value = textToCopy;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    const originalHTML = e.currentTarget.innerHTML;
+                    e.currentTarget.innerHTML = '<i class="fa-solid fa-check" style="color:#10b981;"></i>';
+                    setTimeout(() => e.currentTarget.innerHTML = originalHTML, 2000);
+                } catch (err) {}
+                document.body.removeChild(textArea);
+            }
+        });
+    });
+
+    // 15. Countdown Timer (To 2026-09-19 00:00:00 JST)
+    const updateCountdown = () => {
+        const targetDate = new Date("2026-09-19T00:00:00+09:00").getTime();
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        const el = document.getElementById('countdown-text');
+        if (!el) return;
+
+        if (distance < 0) {
+            el.innerHTML = "福岡之旅已出發！🎉";
+            return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        el.innerHTML = `倒數 <b>${days}</b> 天 <b>${hours}</b> 小時`;
+    };
+    updateCountdown();
+    setInterval(updateCountdown, 1000 * 60 * 60); // Update every hour
+
+    // 16. Weather Forecast Fetch (Open-Meteo)
+    const fetchWeather = async () => {
+        const el = document.getElementById('weather-text');
+        if (!el) return;
+        try {
+            // Fetch current weather for Fukuoka (33.59, 130.41)
+            const url = "https://api.open-meteo.com/v1/forecast?latitude=33.59&longitude=130.41&current_weather=true";
+            const response = await fetch(url);
+            const data = await response.json();
+            
+            if(data.current_weather) {
+                const temp = data.current_weather.temperature;
+                const weathercode = data.current_weather.weathercode;
+                let icon = 'fa-cloud'; // default
+                
+                // simple mapping for WMO weather codes
+                if(weathercode <= 1) icon = 'fa-sun';
+                else if (weathercode <= 3) icon = 'fa-cloud-sun';
+                else if (weathercode <= 45) icon = 'fa-smog';
+                else if (weathercode <= 67) icon = 'fa-cloud-rain';
+                else if (weathercode <= 77) icon = 'fa-snowflake';
+                else if (weathercode <= 99) icon = 'fa-cloud-bolt';
+
+                el.innerHTML = `福岡 <i class="fa-solid ${icon}" style="margin: 0 4px;"></i> ${temp}°C`;
+            }
+        } catch(err) {
+            el.innerHTML = "天氣更新失敗";
+        }
+    };
+    fetchWeather();
 
     // Expose currency update to global so it can trigger from fetch
     const originalFetchThen = () => {

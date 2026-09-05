@@ -183,5 +183,6 @@ window.appData = {
         }
     ],
     shoppingListData: [],
-    reservationData: []
+    reservationData: [],
+    sharedExpenseData: []
 };

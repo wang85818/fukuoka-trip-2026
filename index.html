@@ -40,6 +40,17 @@
                     <div class="hero-overlay"></div>
                 </header>
                 
+                <!-- Trip Dashboard (Countdown & Weather) -->
+                <div id="trip-dashboard" style="background: linear-gradient(135deg, #e0f2fe, #bfdbfe); margin: 10px 15px; padding: 12px 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+                    <div id="countdown-widget" style="font-weight: bold; color: #1e3a8a; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-plane-departure" style="color: #3b82f6;"></i>
+                        <span id="countdown-text">計算中...</span>
+                    </div>
+                    <div id="weather-widget" style="font-size: 0.9rem; color: #1e40af; display: flex; align-items: center; gap: 6px; text-align: right;">
+                        <span id="weather-text">天氣載入中...</span>
+                    </div>
+                </div>
+
                 <!-- Top Navigation Bar -->
                 <nav class="top-nav">
                     <button class="nav-btn active" data-target="tab-itinerary">
@@ -58,9 +69,13 @@
                         <i class="fa-solid fa-cart-shopping"></i>
                         <span>購物</span>
                     </button>
+                    <button class="nav-btn" data-target="tab-shared">
+                        <i class="fa-solid fa-wallet"></i>
+                        <span>公費</span>
+                    </button>
                     <button class="nav-btn" data-target="tab-reservations">
                         <i class="fa-solid fa-ticket-simple"></i>
-                        <span>預約紀錄</span>
+                        <span>預約</span>
                     </button>
                     <button class="nav-btn" data-target="tab-info">
                         <i class="fa-solid fa-circle-info"></i>
@@ -204,35 +219,93 @@
                     </div>
                 </section>
 
+                <!-- TAB: 公費記帳 -->
+                <section id="tab-shared" class="tab-content">
+                    <div class="section-header">
+                        <h2><i class="fa-solid fa-wallet"></i> 公費記帳本</h2>
+                        <p class="section-subtitle">記錄大家共同的分攤花費</p>
+                    </div>
+                    
+                    <div class="info-card" style="margin-bottom: 20px;">
+                        <div style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
+                            <div style="flex: 2; min-width: 150px;">
+                                <label style="font-size: 0.85rem; color: #6b7280;">項目名稱 (例: 計程車、晚餐)</label>
+                                <input type="text" id="shared-name" class="form-input" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                            </div>
+                            <div style="flex: 1; min-width: 100px;">
+                                <label style="font-size: 0.85rem; color: #6b7280;">日幣金額</label>
+                                <input type="number" id="shared-amount" class="form-input" placeholder="￥0" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                            </div>
+                            <div>
+                                <button id="shared-add-btn" class="action-btn" style="padding: 9px 15px;">➕ 新增紀錄</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="shared-container">
+                        <!-- Shared items dynamically rendered -->
+                    </div>
+
+                    <div class="info-card" style="margin-top: 20px; background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); display: flex; justify-content: space-between; align-items: center;">
+                        <div style="font-weight: bold; color: #166534;">公費總支出</div>
+                        <div style="text-align: right;">
+                            <div id="shared-total-jpy" style="font-size: 1.2rem; font-weight: bold; color: #14532d;">￥ 0</div>
+                            <div id="shared-total-twd" style="font-size: 0.9rem; color: #15803d;">約 NT$ 0</div>
+                        </div>
+                    </div>
+                </section>
+
                 <!-- TAB 4: 實用資訊 -->
                 <section id="tab-info" class="tab-content">
                     <div class="section-header">
                         <h2><i class="fa-solid fa-circle-info"></i> 實用資訊</h2>
                     </div>
                     
-                    <div class="info-card" style="background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);">
-                        <h3><i class="fa-solid fa-yen-sign"></i> 匯率與記帳小幫手</h3>
+                    <!-- VJW / Immigration Card -->
+                    <div class="info-card" style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); margin-bottom: 20px; border-left: 5px solid #f59e0b;">
+                        <h3 style="color: #b45309;"><i class="fa-solid fa-passport"></i> 入境與飯店快查卡 (Visit Japan Web)</h3>
+                        <p style="font-size: 0.85rem; color: #92400e; margin-bottom: 12px;">點擊資料即可複製，方便填寫入境表單。</p>
                         
-                        <div style="background: rgba(255,255,255,0.7); padding: 15px; border-radius: 12px; margin-bottom: 15px;">
-                            <div style="font-weight: bold; margin-bottom: 8px; color: #4f46e5;">即時匯率估算 <span id="exchange-rate-display" style="font-size: 0.85em; font-weight: normal; color: #6b7280;">(載入中...)</span></div>
-                            <div style="display: flex; gap: 10px; align-items: center;">
-                                <div style="flex: 1;">
-                                    <label style="font-size: 0.85rem; color: #6b7280;">日圓 (JPY)</label>
-                                    <input type="number" id="calc-jpy" class="form-input" placeholder="輸入日幣..." style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                        <div style="display: grid; grid-template-columns: 1fr; gap: 10px;">
+                            <div class="vjw-item" style="background: rgba(255,255,255,0.7); padding: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-size: 0.8rem; color: #78350f;">抵達航班 (Flight No.)</div>
+                                    <div style="font-weight: bold; color: #1e293b;">BR102</div>
                                 </div>
-                                <i class="fa-solid fa-arrow-right-arrow-left" style="color: #9ca3af; margin-top: 15px;"></i>
-                                <div style="flex: 1;">
-                                    <label style="font-size: 0.85rem; color: #6b7280;">台幣 (TWD)</label>
-                                    <input type="number" id="calc-twd" class="form-input" placeholder="換算台幣..." style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                                <button class="copy-btn" data-copy="BR102" style="background: none; border: none; color: #f59e0b; cursor: pointer; padding: 5px;"><i class="fa-regular fa-copy"></i></button>
+                            </div>
+                            <div class="vjw-item" style="background: rgba(255,255,255,0.7); padding: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-size: 0.8rem; color: #78350f;">飯店郵遞區號 (Zip Code)</div>
+                                    <div style="font-weight: bold; color: #1e293b;">812-0016</div>
                                 </div>
+                                <button class="copy-btn" data-copy="812-0016" style="background: none; border: none; color: #f59e0b; cursor: pointer; padding: 5px;"><i class="fa-regular fa-copy"></i></button>
+                            </div>
+                            <div class="vjw-item" style="background: rgba(255,255,255,0.7); padding: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-size: 0.8rem; color: #78350f;">飯店地址 (Address)</div>
+                                    <div style="font-weight: bold; color: #1e293b; font-size: 0.9rem;">福岡県福岡市博多区博多駅南1-11-11</div>
+                                </div>
+                                <button class="copy-btn" data-copy="福岡県福岡市博多区博多駅南1-11-11" style="background: none; border: none; color: #f59e0b; cursor: pointer; padding: 5px;"><i class="fa-regular fa-copy"></i></button>
+                            </div>
+                            <div class="vjw-item" style="background: rgba(255,255,255,0.7); padding: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-size: 0.8rem; color: #78350f;">飯店名稱 (Hotel Name)</div>
+                                    <div style="font-weight: bold; color: #1e293b;">EN HOTEL Hakata</div>
+                                </div>
+                                <button class="copy-btn" data-copy="EN HOTEL Hakata" style="background: none; border: none; color: #f59e0b; cursor: pointer; padding: 5px;"><i class="fa-regular fa-copy"></i></button>
+                            </div>
+                            <div class="vjw-item" style="background: rgba(255,255,255,0.7); padding: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-size: 0.8rem; color: #78350f;">飯店電話 (Phone)</div>
+                                    <div style="font-weight: bold; color: #1e293b;">092-414-1111</div>
+                                </div>
+                                <button class="copy-btn" data-copy="092-414-1111" style="background: none; border: none; color: #f59e0b; cursor: pointer; padding: 5px;"><i class="fa-regular fa-copy"></i></button>
                             </div>
                         </div>
+                    </div>
 
-                        <div style="background: rgba(255,255,255,0.7); padding: 15px; border-radius: 12px;">
-                            <div style="font-weight: bold; margin-bottom: 8px; color: #4f46e5;">📝 每日公費記帳本</div>
-                            <textarea id="budget-notes" placeholder="例如：9/19 晚餐拉麵 6000円..." style="width: 100%; height: 80px; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; resize: vertical; font-family: inherit;"></textarea>
-                            <div style="text-align: right; margin-top: 5px;">
-                                <span id="budget-save-status" style="font-size: 0.8rem; color: #10b981; display: none;"><i class="fa-solid fa-check"></i> 已自動儲存</span>
+                    <div class="info-card" style="background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);">
                             </div>
                         </div>
                     </div>
@@ -313,10 +386,10 @@
     </div>
     
     <!-- Modular JavaScript -->
-    <script src="src/data/data.js?v=18"></script>
-    <script src="src/js/map.js?v=18"></script>
-    <script src="src/js/optimize.js?v=18"></script>
-    <script src="src/js/render.js?v=18"></script>
-    <script src="src/js/app.js?v=18"></script>
+    <script src="src/data/data.js?v=19"></script>
+    <script src="src/js/map.js?v=19"></script>
+    <script src="src/js/optimize.js?v=19"></script>
+    <script src="src/js/render.js?v=19"></script>
+    <script src="src/js/app.js?v=19"></script>
 </body>
 </html>

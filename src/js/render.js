@@ -228,5 +228,41 @@ window.renderUI = {
             `;
         });
         container.innerHTML = html;
+    },
+    renderReservations: function(data) {
+        const container = document.getElementById('reservations-container');
+        if (!container) return;
+        
+        if (!data || data.length === 0) {
+            container.innerHTML = '<div style="text-align: center; padding: 30px; color: #9ca3af;">目前沒有預約紀錄。</div>';
+            return;
+        }
+
+        let html = '';
+        data.forEach((item, idx) => {
+            let typeColor = '#3b82f6';
+            if (item.type.includes('餐廳')) typeColor = '#f59e0b';
+            if (item.type.includes('門票')) typeColor = '#10b981';
+            if (item.type.includes('其他')) typeColor = '#8b5cf6';
+            
+            html += `
+                <div class="info-card" style="margin-bottom: 12px; padding: 15px; display: flex; flex-direction: column; gap: 8px; border-left: 5px solid ${typeColor};">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <span style="font-size: 0.8rem; background: ${typeColor}20; color: ${typeColor}; padding: 3px 8px; border-radius: 12px; font-weight: bold;">${item.type}</span>
+                            <div style="font-weight: bold; font-size: 1.1rem; margin-top: 8px; color: #1e293b;">${item.name}</div>
+                        </div>
+                        <button class="action-btn res-del-btn" data-idx="${idx}" style="background: none; border: none; color: #ef4444; padding: 5px; box-shadow: none;">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                    <div style="display: flex; gap: 15px; margin-top: 5px; font-size: 0.9rem; color: #475569; flex-wrap: wrap;">
+                        ${item.time ? `<div><i class="fa-regular fa-clock" style="color:#64748b;"></i> ${item.time}</div>` : ''}
+                        ${item.note ? `<div><i class="fa-regular fa-note-sticky" style="color:#64748b;"></i> ${item.note}</div>` : ''}
+                    </div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
     }
 };

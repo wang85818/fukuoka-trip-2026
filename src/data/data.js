@@ -182,5 +182,6 @@ window.appData = {
             ]
         }
     ],
-    shoppingListData: []
+    shoppingListData: [],
+    reservationData: []
 };

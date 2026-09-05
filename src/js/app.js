@@ -79,10 +79,19 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch(e) {}
         }
 
+        // Reservation Data Loading
+        const savedReservations = localStorage.getItem('fukuokaReservations');
+        if (savedReservations) {
+            try {
+                window.appData.reservationData = JSON.parse(savedReservations);
+            } catch(e) {}
+        }
+
         window.renderUI.renderItinerary(window.appData.itineraryData);
         window.renderUI.renderPOIs(); 
         window.renderUI.renderChecklist(window.appData.checklistData);
         window.renderUI.renderShoppingList(window.appData.shoppingListData);
+        if(window.renderUI.renderReservations) window.renderUI.renderReservations(window.appData.reservationData);
         if(window.updateShoppingTotal) window.updateShoppingTotal();
         
         // Initialize Map after rendering itinerary
@@ -450,6 +459,46 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('fukuokaShoppingList', JSON.stringify(window.appData.shoppingListData));
                 window.renderUI.renderShoppingList(window.appData.shoppingListData);
                 window.updateShoppingTotal();
+            }
+        });
+    }
+
+    // 12. Reservations Logic
+    const resAddBtn = document.getElementById('res-add-btn');
+    if (resAddBtn) {
+        resAddBtn.addEventListener('click', () => {
+            const type = document.getElementById('res-type').value;
+            const name = document.getElementById('res-name').value.trim();
+            const time = document.getElementById('res-time').value.trim();
+            const note = document.getElementById('res-note').value.trim();
+            
+            if (!name) {
+                alert("請輸入預約/票券名稱！");
+                return;
+            }
+            
+            window.appData.reservationData.push({ type, name, time, note });
+            
+            localStorage.setItem('fukuokaReservations', JSON.stringify(window.appData.reservationData));
+            window.renderUI.renderReservations(window.appData.reservationData);
+            
+            document.getElementById('res-name').value = '';
+            document.getElementById('res-time').value = '';
+            document.getElementById('res-note').value = '';
+        });
+    }
+
+    const resContainer = document.getElementById('reservations-container');
+    if (resContainer) {
+        resContainer.addEventListener('click', (e) => {
+            const delBtn = e.target.closest('.res-del-btn');
+            if (delBtn) {
+                const idx = delBtn.getAttribute('data-idx');
+                if(confirm("確定要刪除這筆紀錄嗎？")) {
+                    window.appData.reservationData.splice(idx, 1);
+                    localStorage.setItem('fukuokaReservations', JSON.stringify(window.appData.reservationData));
+                    window.renderUI.renderReservations(window.appData.reservationData);
+                }
             }
         });
     }

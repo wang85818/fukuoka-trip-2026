@@ -54,9 +54,19 @@ const mapModule = {
         // Add markers for each stop
         const bounds = L.latLngBounds();
         validStops.forEach((stop, index) => {
+            const seqNum = index + 1;
+            const customIcon = L.divIcon({
+                className: 'custom-div-icon',
+                html: `<div class="marker-pin"></div><i class="marker-number">${seqNum}</i>`,
+                iconSize: [30, 42],
+                iconAnchor: [15, 42],
+                popupAnchor: [0, -35]
+            });
+
             const marker = L.marker([stop.lat, stop.lng], {
-                title: stop.desc
-            }).bindPopup(`<b>第 ${index + 1} 站</b><br>${stop.desc}`);
+                title: stop.desc,
+                icon: customIcon
+            }).bindPopup(`<b>第 ${seqNum} 站</b><br>${stop.desc}`);
             
             marker.addTo(this.map);
             this.markers.push(marker);

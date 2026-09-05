@@ -58,6 +58,10 @@
                         <i class="fa-solid fa-cart-shopping"></i>
                         <span>購物</span>
                     </button>
+                    <button class="nav-btn" data-target="tab-reservations">
+                        <i class="fa-solid fa-ticket-simple"></i>
+                        <span>預約紀錄</span>
+                    </button>
                     <button class="nav-btn" data-target="tab-info">
                         <i class="fa-solid fa-circle-info"></i>
                         <span>資訊</span>
@@ -156,6 +160,47 @@
                             <div id="shop-total-jpy" style="font-size: 1.2rem; font-weight: bold; color: #9d174d;">￥ 0</div>
                             <div id="shop-total-twd" style="font-size: 0.9rem; color: #ec4899;">約 NT$ 0</div>
                         </div>
+                    </div>
+                </section>
+
+                <!-- TAB: 預約紀錄 -->
+                <section id="tab-reservations" class="tab-content">
+                    <div class="section-header">
+                        <h2><i class="fa-solid fa-ticket-simple"></i> 預約與票券紀錄</h2>
+                        <p class="section-subtitle">餐廳訂位、交通車票、景點門票一目了然</p>
+                    </div>
+                    
+                    <div class="info-card" style="margin-bottom: 20px;">
+                        <div style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
+                            <div style="flex: 1; min-width: 100px;">
+                                <label style="font-size: 0.85rem; color: #6b7280;">類別</label>
+                                <select id="res-type" class="form-input" style="width: 100%; padding: 8.5px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                                    <option value="🍽️ 餐廳訂位">🍽️ 餐廳訂位</option>
+                                    <option value="🚅 交通車票">🚅 交通車票</option>
+                                    <option value="🎟️ 景點門票">🎟️ 景點門票</option>
+                                    <option value="🏨 其他預約">🏨 其他預約</option>
+                                </select>
+                            </div>
+                            <div style="flex: 2; min-width: 120px;">
+                                <label style="font-size: 0.85rem; color: #6b7280;">名稱 (例: 敘敘苑燒肉)</label>
+                                <input type="text" id="res-name" class="form-input" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                            </div>
+                            <div style="flex: 1; min-width: 120px;">
+                                <label style="font-size: 0.85rem; color: #6b7280;">時間 / 場次</label>
+                                <input type="text" id="res-time" class="form-input" placeholder="例如：9/20 18:30" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                            </div>
+                            <div style="flex: 2; min-width: 150px;">
+                                <label style="font-size: 0.85rem; color: #6b7280;">備註 / 訂位代號</label>
+                                <input type="text" id="res-note" class="form-input" placeholder="確認碼或備註" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                            </div>
+                            <div>
+                                <button id="res-add-btn" class="action-btn" style="padding: 9px 15px;">➕ 新增紀錄</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="reservations-container">
+                        <!-- Reservations rendered here -->
                     </div>
                 </section>
 
@@ -268,10 +313,10 @@
     </div>
     
     <!-- Modular JavaScript -->
-    <script src="src/data/data.js?v=17"></script>
-    <script src="src/js/map.js?v=17"></script>
-    <script src="src/js/optimize.js?v=17"></script>
-    <script src="src/js/render.js?v=17"></script>
-    <script src="src/js/app.js?v=17"></script>
+    <script src="src/data/data.js?v=18"></script>
+    <script src="src/js/map.js?v=18"></script>
+    <script src="src/js/optimize.js?v=18"></script>
+    <script src="src/js/render.js?v=18"></script>
+    <script src="src/js/app.js?v=18"></script>
 </body>
 </html>

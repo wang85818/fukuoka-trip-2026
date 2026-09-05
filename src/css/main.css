@@ -203,3 +203,43 @@ body {
 .leaflet-container {
     z-index: 1;
 }
+
+/* Custom Numbered Marker */
+.custom-div-icon {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.custom-div-icon .marker-pin {
+    width: 30px;
+    height: 30px;
+    border-radius: 50% 50% 50% 0;
+    background: #ef4444; /* red */
+    position: absolute;
+    transform: rotate(-45deg);
+    left: 50%;
+    top: 50%;
+    margin: -15px 0 0 -15px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+}
+.custom-div-icon .marker-pin::after {
+    content: '';
+    width: 24px;
+    height: 24px;
+    margin: 3px 0 0 3px;
+    background: #fff;
+    position: absolute;
+    border-radius: 50%;
+}
+.custom-div-icon .marker-number {
+    position: absolute;
+    z-index: 2;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    color: #ef4444;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

@@ -19,6 +19,8 @@
     <!-- Leaflet for Map -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- lz-string for URL compression -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
 </head>
 <body>
     <div class="split-layout">
@@ -27,11 +29,14 @@
             <main class="content-area">
                 
                 <!-- Header -->
-                <header class="hero">
+                <header class="hero" style="position: relative;">
                     <div class="hero-content">
                         <h1>福岡親子旅遊 🇯🇵</h1>
                         <p>9/19 (六) - 9/27 (日)</p>
                     </div>
+                    <button id="share-itinerary-btn" class="action-btn" style="position: absolute; right: 15px; top: 15px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); padding: 5px 10px; font-size: 0.8rem;">
+                        <i class="fa-solid fa-share-nodes"></i> 分享
+                    </button>
                     <div class="hero-overlay"></div>
                 </header>
                 
@@ -152,6 +157,33 @@
                         <h2><i class="fa-solid fa-circle-info"></i> 實用資訊</h2>
                     </div>
                     
+                    <div class="info-card" style="background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);">
+                        <h3><i class="fa-solid fa-yen-sign"></i> 匯率與記帳小幫手</h3>
+                        
+                        <div style="background: rgba(255,255,255,0.7); padding: 15px; border-radius: 12px; margin-bottom: 15px;">
+                            <div style="font-weight: bold; margin-bottom: 8px; color: #4f46e5;">即時匯率估算 <span id="exchange-rate-display" style="font-size: 0.85em; font-weight: normal; color: #6b7280;">(載入中...)</span></div>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <div style="flex: 1;">
+                                    <label style="font-size: 0.85rem; color: #6b7280;">日圓 (JPY)</label>
+                                    <input type="number" id="calc-jpy" class="form-input" placeholder="輸入日幣..." style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                                </div>
+                                <i class="fa-solid fa-arrow-right-arrow-left" style="color: #9ca3af; margin-top: 15px;"></i>
+                                <div style="flex: 1;">
+                                    <label style="font-size: 0.85rem; color: #6b7280;">台幣 (TWD)</label>
+                                    <input type="number" id="calc-twd" class="form-input" placeholder="換算台幣..." style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="background: rgba(255,255,255,0.7); padding: 15px; border-radius: 12px;">
+                            <div style="font-weight: bold; margin-bottom: 8px; color: #4f46e5;">📝 每日公費記帳本</div>
+                            <textarea id="budget-notes" placeholder="例如：9/19 晚餐拉麵 6000円..." style="width: 100%; height: 80px; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; resize: vertical; font-family: inherit;"></textarea>
+                            <div style="text-align: right; margin-top: 5px;">
+                                <span id="budget-save-status" style="font-size: 0.8rem; color: #10b981; display: none;"><i class="fa-solid fa-check"></i> 已自動儲存</span>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="info-card">
                         <h3><i class="fa-solid fa-plane-departure"></i> 航班資訊</h3>
                         <p><strong>去程 (9/19):</strong> 長榮航空 BR102 台北(TPE) 15:10 → 福岡(FUK) 18:20 (6人)</p>
@@ -228,10 +260,10 @@
     </div>
     
     <!-- Modular JavaScript -->
-    <script src="src/data/data.js?v=13"></script>
-    <script src="src/js/map.js?v=13"></script>
-    <script src="src/js/optimize.js?v=13"></script>
-    <script src="src/js/render.js?v=13"></script>
-    <script src="src/js/app.js?v=13"></script>
+    <script src="src/data/data.js?v=14"></script>
+    <script src="src/js/map.js?v=14"></script>
+    <script src="src/js/optimize.js?v=14"></script>
+    <script src="src/js/render.js?v=14"></script>
+    <script src="src/js/app.js?v=14"></script>
 </body>
 </html>

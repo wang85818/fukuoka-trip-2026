@@ -11,10 +11,30 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 1. Initial Data Load
     function loadItinerary() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const sharedData = urlParams.get('data');
+        
+        if (sharedData && window.LZString) {
+            try {
+                const decoded = LZString.decompressFromEncodedURIComponent(sharedData);
+                if (decoded) {
+                    const parsedData = JSON.parse(decoded);
+                    localStorage.setItem('fukuokaItinerary', JSON.stringify(parsedData));
+                    console.log("Loaded itinerary from shared URL.");
+                    // Clean URL
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
+            } catch(e) {
+                console.error("Failed to parse shared data", e);
+                alert("分享連結無效或已損毀。");
+            }
+        }
+
         const CURRENT_DATA_VERSION = "3";
         const savedVersion = localStorage.getItem('fukuokaDataVersion');
         
-        if (savedVersion !== CURRENT_DATA_VERSION) {
+        // Only force overwrite if no shared data was just loaded
+        if (!sharedData && savedVersion !== CURRENT_DATA_VERSION) {
             // Force overwrite with new hardcoded data from data.js
             localStorage.removeItem('fukuokaItinerary');
             localStorage.setItem('fukuokaDataVersion', CURRENT_DATA_VERSION);
@@ -192,6 +212,105 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.key === 'Enter') {
                 poiSearchBtn.click();
             }
+        });
+    }
+
+    // 7. Initialize Checklist Persistence
+    const checkboxes = document.querySelectorAll('.check-list input[type="checkbox"]');
+    const savedChecklist = JSON.parse(localStorage.getItem('fukuokaChecklist') || '{}');
+    
+    checkboxes.forEach(cb => {
+        if (cb.value && savedChecklist[cb.value]) {
+            cb.checked = true;
+        }
+        
+        cb.addEventListener('change', (e) => {
+            if (e.target.value) {
+                savedChecklist[e.target.value] = e.target.checked;
+                localStorage.setItem('fukuokaChecklist', JSON.stringify(savedChecklist));
+            }
+        });
+    });
+
+    // 8. Share Itinerary Logic
+    const shareBtn = document.getElementById('share-itinerary-btn');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', () => {
+            if (!window.LZString) {
+                alert("壓縮套件尚未載入，請稍後再試！");
+                return;
+            }
+            const dataToShare = JSON.stringify(window.appData.itineraryData);
+            const compressed = LZString.compressToEncodedURIComponent(dataToShare);
+            const shareUrl = `${window.location.origin}${window.location.pathname}?data=${compressed}`;
+            
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                alert("✅ 分享連結已複製到剪貼簿！快去貼給家人吧！");
+            }).catch(err => {
+                console.error("Copy failed", err);
+                prompt("請手動複製以下連結：", shareUrl);
+            });
+        });
+    }
+
+    // 9. Currency & Budget Logic
+    const jpyInput = document.getElementById('calc-jpy');
+    const twdInput = document.getElementById('calc-twd');
+    const rateDisplay = document.getElementById('exchange-rate-display');
+    const budgetNotes = document.getElementById('budget-notes');
+    const saveStatus = document.getElementById('budget-save-status');
+    let currentRate = 0.22; // default fallback
+
+    if (jpyInput && twdInput && rateDisplay) {
+        // Fetch real-time rate
+        fetch('https://open.er-api.com/v6/latest/JPY')
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.rates && data.rates.TWD) {
+                    currentRate = data.rates.TWD;
+                    rateDisplay.textContent = `(目前匯率: 1 JPY = ${currentRate.toFixed(4)} TWD)`;
+                }
+            })
+            .catch(err => {
+                console.warn("Fetch exchange rate failed, using fallback.", err);
+                rateDisplay.textContent = `(離線模式，預估匯率 0.22)`;
+            });
+
+        jpyInput.addEventListener('input', (e) => {
+            const jpy = parseFloat(e.target.value);
+            if (!isNaN(jpy)) {
+                twdInput.value = Math.round(jpy * currentRate);
+            } else {
+                twdInput.value = '';
+            }
+        });
+
+        twdInput.addEventListener('input', (e) => {
+            const twd = parseFloat(e.target.value);
+            if (!isNaN(twd)) {
+                jpyInput.value = Math.round(twd / currentRate);
+            } else {
+                jpyInput.value = '';
+            }
+        });
+    }
+
+    // Restore budget notes
+    if (budgetNotes) {
+        const savedNotes = localStorage.getItem('fukuokaBudgetNotes');
+        if (savedNotes) {
+            budgetNotes.value = savedNotes;
+        }
+
+        let timeout = null;
+        budgetNotes.addEventListener('input', (e) => {
+            clearTimeout(timeout);
+            saveStatus.style.display = 'none';
+            timeout = setTimeout(() => {
+                localStorage.setItem('fukuokaBudgetNotes', e.target.value);
+                saveStatus.style.display = 'inline-block';
+                setTimeout(() => { saveStatus.style.display = 'none'; }, 2000);
+            }, 1000);
         });
     }
 

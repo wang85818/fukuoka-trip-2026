@@ -153,5 +153,69 @@ window.addPoiToItinerary = function(poiId) {
 window.renderUI = {
     renderChangelog,
     renderItinerary,
-    renderPOIs
+    renderPOIs,
+    renderChecklist: function(data) {
+        const container = document.getElementById('dynamic-checklist-container');
+        if (!container) return;
+        
+        let html = '';
+        data.forEach((cat, catIndex) => {
+            html += `<div class="checklist-card">
+                <h3>${cat.title}</h3>
+                <ul class="check-list" data-category="${cat.id}">`;
+                
+            cat.items.forEach((item, itemIndex) => {
+                html += `
+                    <li style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <label style="flex: 1; cursor: pointer; display: flex; align-items: center;">
+                            <input type="checkbox" value="${item.id}" data-cat-idx="${catIndex}" data-item-idx="${itemIndex}" ${item.checked ? 'checked' : ''} style="margin-right: 10px; transform: scale(1.2);"> 
+                            <span style="font-size: 0.95rem; ${item.checked ? 'text-decoration: line-through; color: #9ca3af;' : ''}">${item.text}</span>
+                        </label>
+                        <button class="action-btn delete-check-btn" data-cat-idx="${catIndex}" data-item-idx="${itemIndex}" style="background: none; border: none; color: #ef4444; padding: 5px; box-shadow: none;">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </li>`;
+            });
+            
+            html += `</ul>
+                <div style="display: flex; gap: 8px; margin-top: 15px;">
+                    <input type="text" id="new-check-${catIndex}" class="form-input" placeholder="新增項目..." style="flex: 1; padding: 6px 10px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 0.9rem;">
+                    <button class="action-btn add-check-btn" data-cat-idx="${catIndex}" style="padding: 6px 12px; font-size: 0.9rem;">新增</button>
+                </div>
+            </div>`;
+        });
+        container.innerHTML = html;
+    },
+    renderShoppingList: function(data) {
+        const container = document.getElementById('shopping-list-container');
+        if (!container) return;
+        
+        if (data.length === 0) {
+            container.innerHTML = '<div style="text-align: center; padding: 30px; color: #9ca3af;">購物清單目前是空的，開始新增你想買的東西吧！</div>';
+            return;
+        }
+
+        let html = '';
+        data.forEach((item, idx) => {
+            const itemTotal = item.qty * item.price;
+            html += `
+                <div class="info-card" style="margin-bottom: 10px; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; opacity: ${item.bought ? '0.6' : '1'};">
+                    <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                        <input type="checkbox" class="shop-check" data-idx="${idx}" ${item.bought ? 'checked' : ''} style="transform: scale(1.5);">
+                        <div style="flex: 1;">
+                            <div style="font-weight: bold; font-size: 1.05rem; ${item.bought ? 'text-decoration: line-through;' : ''}">${item.name}</div>
+                            <div style="font-size: 0.85rem; color: #6b7280;">數量: ${item.qty} | 單價: ￥${item.price.toLocaleString()}</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="font-weight: bold; color: #4f46e5;">￥${itemTotal.toLocaleString()}</div>
+                        <button class="action-btn shop-del-btn" data-idx="${idx}" style="background: none; border: none; color: #ef4444; padding: 5px; box-shadow: none;">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
 };

@@ -49,17 +49,47 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error("Error parsing saved itinerary", e);
             }
         } else {
-            // First time setup: push local default data to localStorage
             localStorage.setItem('fukuokaItinerary', JSON.stringify(window.appData.itineraryData));
         }
+
+        // Dynamic Checklist Migration & Loading
+        const savedChecklistFull = localStorage.getItem('fukuokaChecklistFull');
+        if (savedChecklistFull) {
+            try {
+                window.appData.checklistData = JSON.parse(savedChecklistFull);
+            } catch(e) {}
+        } else {
+            // Migrate old checklist state if exists
+            const oldSaved = JSON.parse(localStorage.getItem('fukuokaChecklist') || '{}');
+            if (Object.keys(oldSaved).length > 0) {
+                window.appData.checklistData.forEach(cat => {
+                    cat.items.forEach(item => {
+                        if (oldSaved[item.id]) item.checked = true;
+                    });
+                });
+            }
+            localStorage.setItem('fukuokaChecklistFull', JSON.stringify(window.appData.checklistData));
+        }
+
+        // Shopping List Loading
+        const savedShopping = localStorage.getItem('fukuokaShoppingList');
+        if (savedShopping) {
+            try {
+                window.appData.shoppingListData = JSON.parse(savedShopping);
+            } catch(e) {}
+        }
+
         window.renderUI.renderItinerary(window.appData.itineraryData);
-        window.renderUI.renderPOIs(); // Render the new POI Database
+        window.renderUI.renderPOIs(); 
+        window.renderUI.renderChecklist(window.appData.checklistData);
+        window.renderUI.renderShoppingList(window.appData.shoppingListData);
+        if(window.updateShoppingTotal) window.updateShoppingTotal();
         
         // Initialize Map after rendering itinerary
         setTimeout(() => {
             if(window.mapModule && window.appData.itineraryData.length > 0) {
                 window.mapModule.initMap();
-                window.mapModule.updateRouteForDay(window.appData.itineraryData[0], false); // Draw route for day 1 by default, but don't open modal
+                window.mapModule.updateRouteForDay(window.appData.itineraryData[0], false);
             }
         }, 300);
     }
@@ -254,6 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data && data.rates && data.rates.TWD) {
                     currentRate = data.rates.TWD;
                     rateDisplay.textContent = `(目前匯率: 1 JPY = ${currentRate.toFixed(4)} TWD)`;
+                    if (window.updateShoppingTotal) window.updateShoppingTotal();
                 }
             })
             .catch(err => {
@@ -299,4 +330,119 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // 10. Dynamic Checklist Event Delegation
+    const checklistContainer = document.getElementById('dynamic-checklist-container');
+    if (checklistContainer) {
+        checklistContainer.addEventListener('change', (e) => {
+            if (e.target.type === 'checkbox') {
+                const catIdx = e.target.getAttribute('data-cat-idx');
+                const itemIdx = e.target.getAttribute('data-item-idx');
+                window.appData.checklistData[catIdx].items[itemIdx].checked = e.target.checked;
+                localStorage.setItem('fukuokaChecklistFull', JSON.stringify(window.appData.checklistData));
+                window.renderUI.renderChecklist(window.appData.checklistData); // re-render for strike-through
+            }
+        });
+
+        checklistContainer.addEventListener('click', (e) => {
+            const delBtn = e.target.closest('.delete-check-btn');
+            const addBtn = e.target.closest('.add-check-btn');
+            
+            if (delBtn) {
+                const catIdx = delBtn.getAttribute('data-cat-idx');
+                const itemIdx = delBtn.getAttribute('data-item-idx');
+                window.appData.checklistData[catIdx].items.splice(itemIdx, 1);
+                localStorage.setItem('fukuokaChecklistFull', JSON.stringify(window.appData.checklistData));
+                window.renderUI.renderChecklist(window.appData.checklistData);
+            }
+            
+            if (addBtn) {
+                const catIdx = addBtn.getAttribute('data-cat-idx');
+                const input = document.getElementById(`new-check-${catIdx}`);
+                const text = input.value.trim();
+                if (text) {
+                    window.appData.checklistData[catIdx].items.push({
+                        id: `item_${Date.now()}`,
+                        text: text,
+                        checked: false
+                    });
+                    localStorage.setItem('fukuokaChecklistFull', JSON.stringify(window.appData.checklistData));
+                    window.renderUI.renderChecklist(window.appData.checklistData);
+                }
+            }
+        });
+    }
+
+    // 11. Shopping List Logic
+    window.updateShoppingTotal = function() {
+        let totalJpy = 0;
+        window.appData.shoppingListData.forEach(item => {
+            totalJpy += item.qty * item.price;
+        });
+        const totalTwd = Math.round(totalJpy * currentRate);
+        const jpyEl = document.getElementById('shop-total-jpy');
+        const twdEl = document.getElementById('shop-total-twd');
+        if (jpyEl) jpyEl.textContent = `￥ ${totalJpy.toLocaleString()}`;
+        if (twdEl) twdEl.textContent = `約 NT$ ${totalTwd.toLocaleString()}`;
+    };
+
+    const shopAddBtn = document.getElementById('shop-add-btn');
+    if (shopAddBtn) {
+        shopAddBtn.addEventListener('click', () => {
+            const nameInput = document.getElementById('shop-item-name');
+            const qtyInput = document.getElementById('shop-item-qty');
+            const priceInput = document.getElementById('shop-item-price');
+            
+            const name = nameInput.value.trim();
+            const qty = parseInt(qtyInput.value) || 1;
+            const price = parseInt(priceInput.value) || 0;
+            
+            if (!name) {
+                alert("請輸入物品名稱！");
+                return;
+            }
+            
+            window.appData.shoppingListData.push({
+                name: name,
+                qty: qty,
+                price: price,
+                bought: false
+            });
+            
+            localStorage.setItem('fukuokaShoppingList', JSON.stringify(window.appData.shoppingListData));
+            window.renderUI.renderShoppingList(window.appData.shoppingListData);
+            window.updateShoppingTotal();
+            
+            nameInput.value = '';
+            qtyInput.value = '1';
+            priceInput.value = '';
+        });
+    }
+
+    const shopContainer = document.getElementById('shopping-list-container');
+    if (shopContainer) {
+        shopContainer.addEventListener('change', (e) => {
+            if (e.target.classList.contains('shop-check')) {
+                const idx = e.target.getAttribute('data-idx');
+                window.appData.shoppingListData[idx].bought = e.target.checked;
+                localStorage.setItem('fukuokaShoppingList', JSON.stringify(window.appData.shoppingListData));
+                window.renderUI.renderShoppingList(window.appData.shoppingListData);
+            }
+        });
+
+        shopContainer.addEventListener('click', (e) => {
+            const delBtn = e.target.closest('.shop-del-btn');
+            if (delBtn) {
+                const idx = delBtn.getAttribute('data-idx');
+                window.appData.shoppingListData.splice(idx, 1);
+                localStorage.setItem('fukuokaShoppingList', JSON.stringify(window.appData.shoppingListData));
+                window.renderUI.renderShoppingList(window.appData.shoppingListData);
+                window.updateShoppingTotal();
+            }
+        });
+    }
+
+    // Expose currency update to global so it can trigger from fetch
+    const originalFetchThen = () => {
+         window.updateShoppingTotal();
+    };
 });

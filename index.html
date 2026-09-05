@@ -52,7 +52,11 @@
                     </button>
                     <button class="nav-btn" data-target="tab-checklist">
                         <i class="fa-solid fa-list-check"></i>
-                        <span>清單</span>
+                        <span>行李</span>
+                    </button>
+                    <button class="nav-btn" data-target="tab-shopping">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span>購物</span>
                     </button>
                     <button class="nav-btn" data-target="tab-info">
                         <i class="fa-solid fa-circle-info"></i>
@@ -110,43 +114,47 @@
                         <p class="section-subtitle">點擊項目打勾，進度會自動儲存喔！</p>
                     </div>
                     
-                    <div class="checklist-container">
-                        <!-- Category 1 -->
-                        <div class="checklist-card">
-                            <h3>👶 育兒必備</h3>
-                            <ul class="check-list" data-category="baby">
-                                <li><label><input type="checkbox" value="diapers"> <span>尿布 (隨身+行李箱)</span></label></li>
-                                <li><label><input type="checkbox" value="milk"> <span>奶粉 / 奶瓶 / 奶粉分裝盒</span></label></li>
-                                <li><label><input type="checkbox" value="stroller"> <span>嬰兒推車 (輕便可摺疊)</span></label></li>
-                                <li><label><input type="checkbox" value="snacks"> <span>寶寶零食 / 安撫玩具</span></label></li>
-                                <li><label><input type="checkbox" value="wipes"> <span>濕紙巾 / 衛生紙</span></label></li>
-                                <li><label><input type="checkbox" value="baby-clothes"> <span>寶寶換洗衣物 / 外套</span></label></li>
-                            </ul>
-                        </div>
+                    <div class="checklist-container" id="dynamic-checklist-container">
+                        <!-- Dynamically rendered by JS -->
+                    </div>
+                </section>
 
-                        <!-- Category 2 -->
-                        <div class="checklist-card">
-                            <h3>📄 重要文件與物品</h3>
-                            <ul class="check-list" data-category="docs">
-                                <li><label><input type="checkbox" value="passport"> <span>護照 (確認效期>6個月)</span></label></li>
-                                <li><label><input type="checkbox" value="vjw"> <span>Visit Japan Web 截圖/QR Code</span></label></li>
-                                <li><label><input type="checkbox" value="credit-card"> <span>信用卡 (綁定 Apple Pay / 實體卡)</span></label></li>
-                                <li><label><input type="checkbox" value="cash"> <span>日幣現金</span></label></li>
-                                <li><label><input type="checkbox" value="wifi"> <span>網卡 / WiFi 機</span></label></li>
-                                <li><label><input type="checkbox" value="power-bank"> <span>行動電源 / 充電線</span></label></li>
-                            </ul>
+                <!-- TAB: 購物清單 -->
+                <section id="tab-shopping" class="tab-content">
+                    <div class="section-header">
+                        <h2><i class="fa-solid fa-cart-shopping"></i> 血拚購物清單</h2>
+                        <p class="section-subtitle">買好買滿！自動試算匯率與總花費</p>
+                    </div>
+                    
+                    <div class="info-card" style="margin-bottom: 20px;">
+                        <div style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
+                            <div style="flex: 2; min-width: 120px;">
+                                <label style="font-size: 0.85rem; color: #6b7280;">物品名稱</label>
+                                <input type="text" id="shop-item-name" class="form-input" placeholder="例如：吹風機" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                            </div>
+                            <div style="flex: 1; min-width: 60px;">
+                                <label style="font-size: 0.85rem; color: #6b7280;">數量</label>
+                                <input type="number" id="shop-item-qty" class="form-input" value="1" min="1" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                            </div>
+                            <div style="flex: 1; min-width: 80px;">
+                                <label style="font-size: 0.85rem; color: #6b7280;">日幣單價</label>
+                                <input type="number" id="shop-item-price" class="form-input" placeholder="￥0" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                            </div>
+                            <div>
+                                <button id="shop-add-btn" class="action-btn" style="padding: 9px 15px;">➕ 新增</button>
+                            </div>
                         </div>
+                    </div>
 
-                        <!-- Category 3 -->
-                        <div class="checklist-card">
-                            <h3>👕 隨身衣物與藥品</h3>
-                            <ul class="check-list" data-category="clothes">
-                                <li><label><input type="checkbox" value="clothes"> <span>大人換洗衣物 (9天份或可洗)</span></label></li>
-                                <li><label><input type="checkbox" value="jacket"> <span>防風薄外套</span></label></li>
-                                <li><label><input type="checkbox" value="umbrella"> <span>雨傘 / 輕便雨衣</span></label></li>
-                                <li><label><input type="checkbox" value="medicine"> <span>常備藥品 (退燒、腸胃、暈車藥)</span></label></li>
-                                <li><label><input type="checkbox" value="skincare"> <span>保養品 / 防曬乳</span></label></li>
-                            </ul>
+                    <div id="shopping-list-container">
+                        <!-- Shopping list items dynamically rendered -->
+                    </div>
+
+                    <div class="info-card" style="margin-top: 20px; background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%); display: flex; justify-content: space-between; align-items: center;">
+                        <div style="font-weight: bold; color: #be185d;">總計花費 (預估)</div>
+                        <div style="text-align: right;">
+                            <div id="shop-total-jpy" style="font-size: 1.2rem; font-weight: bold; color: #9d174d;">￥ 0</div>
+                            <div id="shop-total-twd" style="font-size: 0.9rem; color: #ec4899;">約 NT$ 0</div>
                         </div>
                     </div>
                 </section>
@@ -260,10 +268,10 @@
     </div>
     
     <!-- Modular JavaScript -->
-    <script src="src/data/data.js?v=15"></script>
-    <script src="src/js/map.js?v=15"></script>
-    <script src="src/js/optimize.js?v=15"></script>
-    <script src="src/js/render.js?v=15"></script>
-    <script src="src/js/app.js?v=15"></script>
+    <script src="src/data/data.js?v=16"></script>
+    <script src="src/js/map.js?v=16"></script>
+    <script src="src/js/optimize.js?v=16"></script>
+    <script src="src/js/render.js?v=16"></script>
+    <script src="src/js/app.js?v=16"></script>
 </body>
 </html>

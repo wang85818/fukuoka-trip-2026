@@ -144,5 +144,43 @@ const itineraryData = [
 window.appData = {
     changelogData,
     poiDatabase,
-    itineraryData
+    itineraryData,
+    checklistData: [
+        {
+            id: "baby",
+            title: "👶 育兒必備",
+            items: [
+                { id: "diapers", text: "尿布 (隨身+行李箱)", checked: false },
+                { id: "milk", text: "奶粉 / 奶瓶 / 奶粉分裝盒", checked: false },
+                { id: "stroller", text: "嬰兒推車 (輕便可摺疊)", checked: false },
+                { id: "snacks", text: "寶寶零食 / 安撫玩具", checked: false },
+                { id: "wipes", text: "濕紙巾 / 衛生紙", checked: false },
+                { id: "baby-clothes", text: "寶寶換洗衣物 / 外套", checked: false }
+            ]
+        },
+        {
+            id: "docs",
+            title: "📄 重要文件與物品",
+            items: [
+                { id: "passport", text: "護照 (確認效期>6個月)", checked: false },
+                { id: "vjw", text: "Visit Japan Web 截圖/QR Code", checked: false },
+                { id: "credit-card", text: "信用卡 (綁定 Apple Pay / 實體卡)", checked: false },
+                { id: "cash", text: "日幣現金", checked: false },
+                { id: "wifi", text: "網卡 / WiFi 機", checked: false },
+                { id: "power-bank", text: "行動電源 / 充電線", checked: false }
+            ]
+        },
+        {
+            id: "clothes",
+            title: "👕 隨身衣物與藥品",
+            items: [
+                { id: "clothes", text: "大人換洗衣物 (9天份或可洗)", checked: false },
+                { id: "jacket", text: "防風薄外套", checked: false },
+                { id: "umbrella", text: "雨傘 / 輕便雨衣", checked: false },
+                { id: "medicine", text: "常備藥品 (退燒、腸胃、暈車藥)", checked: false },
+                { id: "skincare", text: "保養品 / 防曬乳", checked: false }
+            ]
+        }
+    ],
+    shoppingListData: []
 };

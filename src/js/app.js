@@ -215,22 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 7. Initialize Checklist Persistence
-    const checkboxes = document.querySelectorAll('.check-list input[type="checkbox"]');
-    const savedChecklist = JSON.parse(localStorage.getItem('fukuokaChecklist') || '{}');
-    
-    checkboxes.forEach(cb => {
-        if (cb.value && savedChecklist[cb.value]) {
-            cb.checked = true;
-        }
-        
-        cb.addEventListener('change', (e) => {
-            if (e.target.value) {
-                savedChecklist[e.target.value] = e.target.checked;
-                localStorage.setItem('fukuokaChecklist', JSON.stringify(savedChecklist));
-            }
-        });
-    });
+    // 7. Initialize Checklist Persistence (Already implemented above)
 
     // 8. Share Itinerary Logic
     const shareBtn = document.getElementById('share-itinerary-btn');

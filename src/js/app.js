@@ -421,11 +421,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const shopContainer = document.getElementById('shopping-list-container');
     if (shopContainer) {
         shopContainer.addEventListener('change', (e) => {
+            const idx = e.target.getAttribute('data-idx');
             if (e.target.classList.contains('shop-check')) {
-                const idx = e.target.getAttribute('data-idx');
                 window.appData.shoppingListData[idx].bought = e.target.checked;
                 localStorage.setItem('fukuokaShoppingList', JSON.stringify(window.appData.shoppingListData));
                 window.renderUI.renderShoppingList(window.appData.shoppingListData);
+            } else if (e.target.classList.contains('shop-edit-name')) {
+                window.appData.shoppingListData[idx].name = e.target.value.trim();
+                localStorage.setItem('fukuokaShoppingList', JSON.stringify(window.appData.shoppingListData));
+            } else if (e.target.classList.contains('shop-edit-qty')) {
+                window.appData.shoppingListData[idx].qty = parseInt(e.target.value) || 1;
+                localStorage.setItem('fukuokaShoppingList', JSON.stringify(window.appData.shoppingListData));
+                window.renderUI.renderShoppingList(window.appData.shoppingListData);
+                window.updateShoppingTotal();
+            } else if (e.target.classList.contains('shop-edit-price')) {
+                window.appData.shoppingListData[idx].price = parseInt(e.target.value) || 0;
+                localStorage.setItem('fukuokaShoppingList', JSON.stringify(window.appData.shoppingListData));
+                window.renderUI.renderShoppingList(window.appData.shoppingListData);
+                window.updateShoppingTotal();
             }
         });
 

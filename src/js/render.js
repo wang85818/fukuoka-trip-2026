@@ -201,13 +201,24 @@ window.renderUI = {
             html += `
                 <div class="info-card" style="margin-bottom: 10px; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; opacity: ${item.bought ? '0.6' : '1'};">
                     <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
-                        <input type="checkbox" class="shop-check" data-idx="${idx}" ${item.bought ? 'checked' : ''} style="transform: scale(1.5);">
-                        <div style="flex: 1;">
-                            <div style="font-weight: bold; font-size: 1.05rem; ${item.bought ? 'text-decoration: line-through;' : ''}">${item.name}</div>
-                            <div style="font-size: 0.85rem; color: #6b7280;">數量: ${item.qty} | 單價: ￥${item.price.toLocaleString()}</div>
+                        <input type="checkbox" class="shop-check" data-idx="${idx}" ${item.bought ? 'checked' : ''} style="transform: scale(1.5); flex-shrink: 0;">
+                        <div style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
+                            <div style="${item.bought ? 'text-decoration: line-through;' : ''}">
+                                <input type="text" class="shop-edit-name" data-idx="${idx}" value="${item.name}" 
+                                       style="background: transparent; border: none; border-bottom: 1px dashed #9ca3af; width: 90%; max-width: 200px; outline: none; font-weight: bold; font-size: 1.05rem; color: inherit;" 
+                                       ${item.bought ? 'disabled' : ''}>
+                            </div>
+                            <div style="font-size: 0.85rem; color: #6b7280; display: flex; align-items: center; gap: 4px; flex-wrap: wrap;">
+                                數量: <input type="number" class="shop-edit-qty" data-idx="${idx}" value="${item.qty}" min="1" 
+                                             style="width: 50px; padding: 2px 4px; border-radius: 4px; border: 1px solid #cbd5e1; font-size: 0.85rem;" 
+                                             ${item.bought ? 'disabled' : ''}> 
+                                | 單價: ￥<input type="number" class="shop-edit-price" data-idx="${idx}" value="${item.price}" min="0" 
+                                              style="width: 70px; padding: 2px 4px; border-radius: 4px; border: 1px solid #cbd5e1; font-size: 0.85rem;" 
+                                              ${item.bought ? 'disabled' : ''}>
+                            </div>
                         </div>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="display: flex; align-items: center; gap: 15px; flex-shrink: 0;">
                         <div style="font-weight: bold; color: #4f46e5;">￥${itemTotal.toLocaleString()}</div>
                         <button class="action-btn shop-del-btn" data-idx="${idx}" style="background: none; border: none; color: #ef4444; padding: 5px; box-shadow: none;">
                             <i class="fa-solid fa-trash-can"></i>

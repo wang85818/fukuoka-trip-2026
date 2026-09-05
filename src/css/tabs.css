@@ -21,7 +21,7 @@
     justify-content: flex-start;
     align-items: center;
     gap: 8px;
-    padding: 0 15px;
+    padding: 10px 15px; /* Adjust padding to look good wrapped or unwrapped */
     box-sizing: border-box;
     border-bottom: 1px solid rgba(255,255,255,0.4);
     box-shadow: 0 4px 20px rgba(0,0,0,0.06);
@@ -29,11 +29,27 @@
     margin-bottom: 20px;
     overflow-x: auto;
     flex-wrap: nowrap;
-    scrollbar-width: none; /* Hide scrollbar Firefox */
 }
 
-.top-nav::-webkit-scrollbar {
-    display: none; /* Hide scrollbar WebKit */
+/* Hide scrollbar on mobile */
+@media (max-width: 767px) {
+    .top-nav {
+        scrollbar-width: none;
+    }
+    .top-nav::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+/* Wrap on desktop */
+@media (min-width: 768px) {
+    .top-nav {
+        flex-wrap: wrap;
+        height: auto;
+        min-height: var(--nav-height);
+        justify-content: flex-start;
+        padding-bottom: 10px;
+    }
 }
 
 .nav-btn {

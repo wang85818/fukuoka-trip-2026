@@ -29,10 +29,15 @@ const mapModule = {
     openMobileMap: function() {
         if(window.innerWidth < 768) {
             document.getElementById('map-container').classList.add('active');
+            setTimeout(() => {
+                if(this.map) {
+                    this.map.invalidateSize();
+                }
+            }, 300); // 300ms matches typical transition times, ensuring it's shown
         }
     },
 
-    updateRouteForDay: async function(dayData) {
+    updateRouteForDay: async function(dayData, openModal = true) {
         this.clearMap();
 
         if (!dayData || !dayData.timeline || dayData.timeline.length === 0) {
@@ -42,7 +47,9 @@ const mapModule = {
         const validStops = dayData.timeline.filter(t => t.lat && t.lng);
         if (validStops.length === 0) return;
 
-        this.openMobileMap();
+        if (openModal) {
+            this.openMobileMap();
+        }
 
         // Add markers for each stop
         const bounds = L.latLngBounds();
@@ -86,9 +93,11 @@ const mapModule = {
         }
     },
 
-    showPOI: function(lat, lng, name) {
+    showPOI: function(lat, lng, name, openModal = true) {
         this.clearMap();
-        this.openMobileMap();
+        if (openModal) {
+            this.openMobileMap();
+        }
         const marker = L.marker([lat, lng]).bindPopup(`<b>${name}</b>`).addTo(this.map);
         this.markers.push(marker);
         this.map.setView([lat, lng], 14);

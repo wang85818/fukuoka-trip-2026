@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             if(window.mapModule && window.appData.itineraryData.length > 0) {
                 window.mapModule.initMap();
-                window.mapModule.updateRouteForDay(window.appData.itineraryData[0]); // Draw route for day 1 by default
+                window.mapModule.updateRouteForDay(window.appData.itineraryData[0], false); // Draw route for day 1 by default, but don't open modal
             }
         }, 300);
     }

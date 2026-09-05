@@ -11,6 +11,16 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 1. Initial Data Load
     function loadItinerary() {
+        const CURRENT_DATA_VERSION = "3";
+        const savedVersion = localStorage.getItem('fukuokaDataVersion');
+        
+        if (savedVersion !== CURRENT_DATA_VERSION) {
+            // Force overwrite with new hardcoded data from data.js
+            localStorage.removeItem('fukuokaItinerary');
+            localStorage.setItem('fukuokaDataVersion', CURRENT_DATA_VERSION);
+            console.log("Data version updated. Local storage cleared.");
+        }
+
         const savedItinerary = localStorage.getItem('fukuokaItinerary');
         if (savedItinerary) {
             try {

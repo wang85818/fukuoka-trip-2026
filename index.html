@@ -89,11 +89,16 @@
 
                 <!-- TAB 1: 行程表 -->
                 <section id="tab-itinerary" class="tab-content active">
-                    <div class="section-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
                         <h2><i class="fa-regular fa-calendar-days"></i> 每日行程</h2>
-                        <button id="export-pdf-btn" class="action-btn" style="padding: 8px 15px; font-size: 0.9rem;">
-                            <i class="fa-solid fa-file-pdf"></i> 匯出 PDF
-                        </button>
+                        <div>
+                            <button id="test-alert-btn" class="action-btn" style="padding: 8px 15px; font-size: 0.9rem; background: #8b5cf6; margin-right: 5px;">
+                                <i class="fa-regular fa-bell"></i> 測試提醒
+                            </button>
+                            <button id="export-pdf-btn" class="action-btn" style="padding: 8px 15px; font-size: 0.9rem;">
+                                <i class="fa-solid fa-file-pdf"></i> 匯出 PDF
+                            </button>
+                        </div>
                     </div>
                     <div id="itinerary-list" class="itinerary-list">
                         <!-- Cards dynamically inserted here -->
@@ -228,9 +233,19 @@
                     
                     <div class="info-card" style="margin-bottom: 20px;">
                         <div style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
-                            <div style="flex: 2; min-width: 150px;">
+                            <div style="flex: 2; min-width: 120px;">
                                 <label style="font-size: 0.85rem; color: #6b7280;">項目名稱 (例: 計程車、晚餐)</label>
                                 <input type="text" id="shared-name" class="form-input" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                            </div>
+                            <div style="flex: 1.5; min-width: 100px;">
+                                <label style="font-size: 0.85rem; color: #6b7280;">類別</label>
+                                <select id="shared-category" class="form-input" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #cbd5e1; background: white;">
+                                    <option value="餐飲">餐飲</option>
+                                    <option value="交通">交通</option>
+                                    <option value="住宿">住宿</option>
+                                    <option value="門票">門票</option>
+                                    <option value="其他">其他</option>
+                                </select>
                             </div>
                             <div style="flex: 1; min-width: 100px;">
                                 <label style="font-size: 0.85rem; color: #6b7280;">日幣金額</label>
@@ -251,6 +266,13 @@
                         <div style="text-align: right;">
                             <div id="shared-total-jpy" style="font-size: 1.2rem; font-weight: bold; color: #14532d;">￥ 0</div>
                             <div id="shared-total-twd" style="font-size: 0.9rem; color: #15803d;">約 NT$ 0</div>
+                        </div>
+                    </div>
+
+                    <div class="info-card" style="margin-top: 20px;">
+                        <h3><i class="fa-solid fa-chart-pie"></i> 支出結構分析</h3>
+                        <div style="width: 100%; max-width: 300px; margin: 0 auto; min-height: 200px;">
+                            <canvas id="expenseChart"></canvas>
                         </div>
                     </div>
                 </section>
@@ -407,11 +429,15 @@
         </div>
     </div>
     
+    <!-- Toast Notification Container -->
+    <div id="toast-container" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none;"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Modular JavaScript -->
-    <script src="src/data/data.js?v=22"></script>
-    <script src="src/js/map.js?v=22"></script>
-    <script src="src/js/optimize.js?v=22"></script>
-    <script src="src/js/render.js?v=22"></script>
-    <script src="src/js/app.js?v=22"></script>
+    <script src="src/data/data.js?v=23"></script>
+    <script src="src/js/map.js?v=23"></script>
+    <script src="src/js/optimize.js?v=23"></script>
+    <script src="src/js/render.js?v=23"></script>
+    <script src="src/js/app.js?v=23"></script>
 </body>
 </html>

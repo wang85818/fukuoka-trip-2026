@@ -203,10 +203,11 @@ window.renderUI = {
                     <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
                         <input type="checkbox" class="shop-check" data-idx="${idx}" ${item.bought ? 'checked' : ''} style="transform: scale(1.5); flex-shrink: 0;">
                         <div style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
-                            <div style="${item.bought ? 'text-decoration: line-through;' : ''}">
+                            <div style="${item.bought ? 'text-decoration: line-through;' : ''} display: flex; align-items: baseline; gap: 8px;">
                                 <input type="text" class="shop-edit-name" data-idx="${idx}" value="${item.name}" 
-                                       style="background: transparent; border: none; border-bottom: 1px dashed #9ca3af; width: 90%; max-width: 200px; outline: none; font-weight: bold; font-size: 1.05rem; color: inherit;" 
+                                       style="background: transparent; border: none; border-bottom: 1px dashed #9ca3af; width: 60%; max-width: 150px; outline: none; font-weight: bold; font-size: 1.05rem; color: inherit;" 
                                        ${item.bought ? 'disabled' : ''}>
+                                ${item.recipient ? `<span style="font-size: 0.75rem; background: #e0e7ff; color: #4338ca; padding: 2px 6px; border-radius: 4px;">送給: ${item.recipient}</span>` : ''}
                             </div>
                             <div style="font-size: 0.85rem; color: #6b7280; display: flex; align-items: center; gap: 4px; flex-wrap: wrap;">
                                 數量: <input type="number" class="shop-edit-qty" data-idx="${idx}" value="${item.qty}" min="1" 
@@ -279,7 +280,10 @@ window.renderUI = {
             html += `
                 <div class="info-card" style="margin-bottom: 12px; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid #16a34a;">
                     <div style="flex: 1;">
-                        <div style="font-weight: bold; font-size: 1.1rem; color: #1e293b;">${item.name}</div>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <span style="font-size: 0.75rem; background: #dcfce7; color: #166534; padding: 2px 6px; border-radius: 4px;">${item.category || '其他'}</span>
+                            <div style="font-weight: bold; font-size: 1.1rem; color: #1e293b;">${item.name}</div>
+                        </div>
                     </div>
                     <div style="font-weight: bold; color: #166534; font-size: 1.1rem; margin-right: 15px;">
                         ￥${item.amount.toLocaleString()}
@@ -291,5 +295,46 @@ window.renderUI = {
             `;
         });
         container.innerHTML = html;
+
+        // Update Chart
+        if (window.expenseChartInstance) {
+            window.expenseChartInstance.destroy();
+        }
+        
+        const ctx = document.getElementById('expenseChart');
+        if (ctx) {
+            const categories = {};
+            data.forEach(item => {
+                const cat = item.category || '其他';
+                categories[cat] = (categories[cat] || 0) + item.amount;
+            });
+            
+            const labels = Object.keys(categories);
+            const values = Object.values(categories);
+            
+            // If completely empty but data length > 0 somehow, handle it
+            if (values.length === 0) return;
+
+            window.expenseChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: [
+                            '#3b82f6', '#f59e0b', '#10b981', '#ec4899', '#8b5cf6', '#64748b'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
     }
 };

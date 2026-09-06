@@ -418,11 +418,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const shopAddBtn = document.getElementById('shop-add-btn');
     if (shopAddBtn) {
         shopAddBtn.addEventListener('click', () => {
-            const nameInput = document.getElementById('shop-item-name');
-            const qtyInput = document.getElementById('shop-item-qty');
-            const priceInput = document.getElementById('shop-item-price');
+            const nameInput = document.getElementById('shop-name');
+            const recInput = document.getElementById('shop-recipient');
+            const qtyInput = document.getElementById('shop-qty');
+            const priceInput = document.getElementById('shop-price');
             
             const name = nameInput.value.trim();
+            const recipient = recInput.value.trim();
             const qty = parseInt(qtyInput.value) || 1;
             const price = parseInt(priceInput.value) || 0;
             
@@ -433,6 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             window.appData.shoppingListData.push({
                 name: name,
+                recipient: recipient,
                 qty: qty,
                 price: price,
                 bought: false
@@ -443,6 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.updateShoppingTotal();
             
             nameInput.value = '';
+            recInput.value = '';
             qtyInput.value = '1';
             priceInput.value = '';
         });
@@ -523,20 +527,30 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
-    // 13. Shared Expenses Logic
+    
+    // 14. Shared Expenses Logic
     const sharedAddBtn = document.getElementById('shared-add-btn');
     if (sharedAddBtn) {
         sharedAddBtn.addEventListener('click', () => {
-            const name = document.getElementById('shared-name').value.trim();
-            const amount = parseInt(document.getElementById('shared-amount').value) || 0;
+            const nameInput = document.getElementById('shared-name');
+            const catInput = document.getElementById('shared-category');
+            const amountInput = document.getElementById('shared-amount');
+            
+            const name = nameInput.value.trim();
+            const category = catInput ? catInput.value : '其他';
+            const amount = parseInt(amountInput.value) || 0;
             
             if (!name || amount <= 0) {
-                alert("請輸入有效的項目名稱與金額！");
+                alert("請輸入項目名稱與有效金額！");
                 return;
             }
             
-            window.appData.sharedExpenseData.push({ name, amount });
+            window.appData.sharedExpenseData.push({
+                name: name,
+                category: category,
+                amount: amount,
+                timestamp: Date.now()
+            });
             
             localStorage.setItem('fukuokaSharedExpenses', JSON.stringify(window.appData.sharedExpenseData));
             window.renderUI.renderSharedExpenses(window.appData.sharedExpenseData);
@@ -646,4 +660,83 @@ document.addEventListener('DOMContentLoaded', () => {
     const originalFetchThen = () => {
          window.updateShoppingTotal();
     };
+
+    // 17. Pocket Translator (Speech Synthesis)
+    const speakBtns = document.querySelectorAll('.speak-btn');
+    speakBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const text = btn.getAttribute('data-text');
+            if (text && 'speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'ja-JP';
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
+        });
+    });
+
+    // 18. Timeline Alerts Logic
+    function showToast(message, icon = 'fa-bell') {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+        
+        const toast = document.createElement('div');
+        toast.style.background = '#4f46e5';
+        toast.style.color = 'white';
+        toast.style.padding = '12px 20px';
+        toast.style.borderRadius = '8px';
+        toast.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+        toast.style.display = 'flex';
+        toast.style.alignItems = 'center';
+        toast.style.gap = '10px';
+        toast.style.fontWeight = 'bold';
+        toast.style.transform = 'translateY(-20px)';
+        toast.style.opacity = '0';
+        toast.style.transition = 'all 0.3s ease';
+        toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${message}</span>`;
+        
+        container.appendChild(toast);
+        
+        // Animate in
+        requestAnimationFrame(() => {
+            toast.style.transform = 'translateY(0)';
+            toast.style.opacity = '1';
+        });
+        
+        // Remove after 4 seconds
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(-20px)';
+            setTimeout(() => toast.remove(), 300);
+        }, 4000);
+    }
+    
+    // Demo Test Alert Button
+    const testAlertBtn = document.getElementById('test-alert-btn');
+    if (testAlertBtn) {
+        testAlertBtn.addEventListener('click', () => {
+            const demoMsgs = [
+                "提醒：下一個行程「太宰府天滿宮」將在 30 分鐘後開始！",
+                "提醒：請準備前往「EN HOTEL Hakata」辦理入住。",
+                "提醒：您預約的「人形町今半」即將在 1 小時內抵達。",
+                "提醒：搭乘「JR 特急」時間快到了，請前往月台！"
+            ];
+            const msg = demoMsgs[Math.floor(Math.random() * demoMsgs.length)];
+            showToast(msg);
+        });
+    }
+
+    // 19. Service Worker Registration
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./service-worker.js')
+                .then(registration => {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                })
+                .catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+        });
+    }
+
 });

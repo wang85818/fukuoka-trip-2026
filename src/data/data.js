@@ -191,6 +191,18 @@ window.appData = {
                 { id: "medicine", text: "常備藥品 (退燒、腸胃、暈車藥)", checked: false },
                 { id: "skincare", text: "保養品 / 防曬乳", checked: false }
             ]
+        },
+        {
+            id: "tickets",
+            title: "🎟️ 必備票券與預約",
+            items: [
+                { id: "tk1", text: "【9/20】柳川川下り遊船 乘船券", checked: false },
+                { id: "tk2", text: "【9/22】豪斯登堡 1 DAY Passport", checked: false },
+                { id: "tk3", text: "【9/22】JR 特急豪斯登堡號 劃位指定席", checked: false },
+                { id: "tk4", text: "【9/23】別府地獄溫泉門票", checked: false },
+                { id: "tk5", text: "【9/24】九州動物園門票 + 叢林巴士券 (極重要)", checked: false },
+                { id: "tk6", text: "【9/25】海之中道海洋生態科學館門票", checked: false }
+            ]
         }
     ],
     shoppingListData: [],

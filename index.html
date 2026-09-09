@@ -61,6 +61,10 @@
                         <i class="fa-solid fa-map-location-dot"></i>
                         <span>景點庫</span>
                     </button>
+                    <button class="nav-btn" data-target="tab-checklist">
+                        <i class="fa-solid fa-list-check"></i>
+                        <span>清單</span>
+                    </button>
                     <button class="nav-btn" data-target="tab-shopping">
                         <i class="fa-solid fa-cart-shopping"></i>
                         <span>購物</span>
@@ -70,8 +74,8 @@
                         <span>公費</span>
                     </button>
                     <button class="nav-btn" data-target="tab-reservations">
-                        <i class="fa-solid fa-list-check"></i>
-                        <span>清單/預約</span>
+                        <i class="fa-solid fa-ticket-simple"></i>
+                        <span>預約</span>
                     </button>
                     <button class="nav-btn" data-target="tab-info">
                         <i class="fa-solid fa-circle-info"></i>
@@ -127,6 +131,18 @@
                     </div>
                 </section>
 
+                <!-- TAB 3: 行前檢查清單 -->
+                <section id="tab-checklist" class="tab-content">
+                    <div class="section-header">
+                        <h2><i class="fa-solid fa-suitcase-rolling"></i> 行前檢查清單</h2>
+                        <p class="section-subtitle">點擊項目打勾，進度會自動儲存喔！</p>
+                    </div>
+                    
+                    <div class="checklist-container" id="dynamic-checklist-container">
+                        <!-- Dynamically rendered by JS -->
+                    </div>
+                </section>
+
                 <!-- TAB: 購物清單 -->
                 <section id="tab-shopping" class="tab-content">
                     <div class="section-header">
@@ -170,16 +186,9 @@
                 <!-- TAB: 預約紀錄 -->
                 <section id="tab-reservations" class="tab-content">
                     <div class="section-header">
-                        <h2><i class="fa-solid fa-list-check"></i> 行前清單與預約紀錄</h2>
-                        <p class="section-subtitle">行李準備、門票購買、餐廳訂位一目了然，進度自動儲存</p>
+                        <h2><i class="fa-solid fa-ticket-simple"></i> 預約與票券紀錄</h2>
+                        <p class="section-subtitle">餐廳訂位、交通車票、景點門票一目了然</p>
                     </div>
-                    
-                    <h3 style="margin-bottom: 10px; font-size: 1.1rem; color: var(--primary-color);"><i class="fa-solid fa-suitcase-rolling"></i> 行前檢查清單</h3>
-                    <div class="checklist-container" id="dynamic-checklist-container" style="margin-bottom: 30px;">
-                        <!-- Dynamically rendered by JS -->
-                    </div>
-
-                    <h3 style="margin-bottom: 10px; font-size: 1.1rem; color: var(--primary-color);"><i class="fa-solid fa-ticket-simple"></i> 預約與票券紀錄</h3>
                     
                     <div class="info-card" style="margin-bottom: 20px;">
                         <div style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
@@ -429,6 +438,6 @@
     <script src="src/js/map.js?v=23"></script>
     <script src="src/js/optimize.js?v=23"></script>
     <script src="src/js/render.js?v=24"></script>
-    <script src="src/js/app.js?v=26"></script>
+    <script src="src/js/app.js?v=27"></script>
 </body>
 </html>

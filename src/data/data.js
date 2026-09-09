@@ -206,6 +206,14 @@ window.appData = {
         }
     ],
     shoppingListData: [],
-    reservationData: [],
+    reservationData: [
+        { type: "🎟️ 景點門票", name: "柳川川下り遊船 (乘船券)", time: "9/20", note: "未購票" },
+        { type: "🎟️ 景點門票", name: "豪斯登堡 1 DAY Passport", time: "9/22", note: "未購票" },
+        { type: "🚅 交通車票", name: "JR 特急豪斯登堡號 (指定席)", time: "9/22", note: "未劃位" },
+        { type: "🎟️ 景點門票", name: "別府地獄溫泉門票 (海地獄/血池)", time: "9/23", note: "現場購買" },
+        { type: "🎟️ 景點門票", name: "九州自然動物公園 (門票+叢林巴士)", time: "9/24", note: "務必提前預約" },
+        { type: "🎟️ 景點門票", name: "海之中道海洋生態科學館", time: "9/25", note: "未購票" },
+        { type: "🎟️ 景點門票", name: "海之中道海濱公園 (入園費)", time: "9/26", note: "現場購買" }
+    ],
     sharedExpenseData: []
 };

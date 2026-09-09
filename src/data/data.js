@@ -30,7 +30,7 @@ const itineraryData = [
         hotel: "EN HOTEL Hakata",
         timeline: [
             { id: "t1_1", time: "18:20", desc: "福岡機場 (FUK) - BR102 抵達", lat: 33.5859, lng: 130.4496, isOptimized: false },
-            { id: "t1_2", time: "19:30", desc: "[車程 15 分鐘] 前往飯店", lat: 33.5859, lng: 130.4496, isOptimized: false },
+            { id: "t1_2", time: "19:30", desc: "[地鐵機場線] 福岡機場站 ➔ 博多站 (乘車 5 分鐘)", lat: 33.5859, lng: 130.4496, isOptimized: false },
             { id: "t1_3", time: "20:00", desc: "EN HOTEL Hakata (Check-in)", lat: 33.5901, lng: 130.4132, isOptimized: false },
             { id: "t1_4", time: "20:30", desc: "晚餐：Shin-Shin 拉麵 (博多車站旁)", lat: 33.5905, lng: 130.4201, isOptimized: false },
             { id: "t1_5", time: "22:00", desc: "返回 EN HOTEL 休息", lat: 33.5901, lng: 130.4132, isOptimized: false }
@@ -42,12 +42,14 @@ const itineraryData = [
         hotel: "EN HOTEL Hakata",
         timeline: [
             { id: "t2_1", time: "09:00", desc: "EN HOTEL Hakata 出發", lat: 33.5901, lng: 130.4132, isOptimized: false },
-            { id: "t2_2", time: "09:45", desc: "[火車 45 分鐘] 太宰府天滿宮", lat: 33.5215, lng: 130.5349, isOptimized: false },
-            { id: "t2_3", time: "12:30", desc: "午餐：太宰府參道美食 (一蘭或梅枝餅)", lat: 33.5198, lng: 130.5312, isOptimized: false },
-            { id: "t2_4", time: "14:00", desc: "[火車 45 分鐘] 柳川遊船", lat: 33.1610, lng: 130.4023, isOptimized: false },
-            { id: "t2_5", time: "18:00", desc: "[火車 1 小時] 返回博多車站", lat: 33.5897, lng: 130.4207, isOptimized: false },
-            { id: "t2_6", time: "18:30", desc: "晚餐：博多車站美食街", lat: 33.5897, lng: 130.4207, isOptimized: false },
-            { id: "t2_7", time: "20:00", desc: "返回 EN HOTEL 休息", lat: 33.5901, lng: 130.4132, isOptimized: false }
+            { id: "t2_2", time: "09:30", desc: "[西鐵大牟田線+太宰府線] 西鐵福岡(天神)站 ➔ 太宰府站 (需在二日市轉乘，約 45 分鐘)", lat: 33.5215, lng: 130.5349, isOptimized: false },
+            { id: "t2_3", time: "10:30", desc: "太宰府天滿宮參拜與參道散策", lat: 33.5215, lng: 130.5349, isOptimized: false },
+            { id: "t2_4", time: "12:30", desc: "午餐：太宰府參道美食 (一蘭或梅枝餅)", lat: 33.5198, lng: 130.5312, isOptimized: false },
+            { id: "t2_5", time: "13:45", desc: "[西鐵大牟田線] 太宰府站 ➔ 西鐵柳川站 (需在二日市轉乘，特急約 45 分鐘)", lat: 33.1610, lng: 130.4023, isOptimized: false },
+            { id: "t2_6", time: "15:00", desc: "柳川川下り遊船 (已預約乘船)", lat: 33.1610, lng: 130.4023, isOptimized: false },
+            { id: "t2_7", time: "17:30", desc: "晚餐：柳川名物 本吉屋 鰻魚飯", lat: 33.1610, lng: 130.4023, isOptimized: false },
+            { id: "t2_8", time: "19:00", desc: "[西鐵特急] 西鐵柳川站 ➔ 西鐵福岡(天神)站 (乘車約 50 分鐘) 後轉地鐵回博多", lat: 33.5897, lng: 130.4207, isOptimized: false },
+            { id: "t2_9", time: "20:30", desc: "返回 EN HOTEL 休息", lat: 33.5901, lng: 130.4132, isOptimized: false }
         ]
     },
     {
@@ -56,12 +58,15 @@ const itineraryData = [
         hotel: "THE BASICS",
         timeline: [
             { id: "t3_1", time: "09:30", desc: "EN HOTEL 退房", lat: 33.5901, lng: 130.4132, isOptimized: false },
-            { id: "t3_2", time: "09:45", desc: "[步行/車 10 分鐘] THE BASICS (寄放行李)", lat: 33.5888, lng: 130.4283, isOptimized: false },
-            { id: "t3_3", time: "10:30", desc: "[公車 15 分鐘] 博多運河城 (Canal City)", lat: 33.5898, lng: 130.4107, isOptimized: false },
-            { id: "t3_4", time: "12:30", desc: "午餐：人形町今半 (壽喜燒)", lat: 33.5898, lng: 130.4190, isOptimized: false },
-            { id: "t3_5", time: "14:30", desc: "[地鐵 15 分鐘] 大濠公園", lat: 33.5861, lng: 130.3768, isOptimized: false },
-            { id: "t3_6", time: "18:00", desc: "晚餐：天神周邊餐廳", lat: 33.5913, lng: 130.3989, isOptimized: false },
-            { id: "t3_7", time: "20:00", desc: "THE BASICS (Check-in 休息)", lat: 33.5888, lng: 130.4283, isOptimized: false }
+            { id: "t3_2", time: "09:45", desc: "[步行] EN HOTEL ➔ THE BASICS (步行約 10 分鐘) 寄放行李", lat: 33.5888, lng: 130.4283, isOptimized: false },
+            { id: "t3_3", time: "10:30", desc: "[西鐵巴士 302等] 博多站前 ➔ 運河城前 (乘車約 10 分鐘)", lat: 33.5898, lng: 130.4107, isOptimized: false },
+            { id: "t3_4", time: "11:00", desc: "博多運河城 (Canal City) 逛街", lat: 33.5898, lng: 130.4107, isOptimized: false },
+            { id: "t3_5", time: "12:30", desc: "午餐：人形町今半 (壽喜燒)", lat: 33.5898, lng: 130.4190, isOptimized: false },
+            { id: "t3_6", time: "14:30", desc: "[地鐵機場線] 中洲川端站 ➔ 大濠公園站 (乘車約 10 分鐘)", lat: 33.5861, lng: 130.3768, isOptimized: false },
+            { id: "t3_7", time: "15:00", desc: "大濠公園 散步與兒童遊戲區", lat: 33.5861, lng: 130.3768, isOptimized: false },
+            { id: "t3_8", time: "17:30", desc: "[地鐵機場線] 大濠公園站 ➔ 天神站 (乘車約 5 分鐘)", lat: 33.5913, lng: 130.3989, isOptimized: false },
+            { id: "t3_9", time: "18:00", desc: "晚餐：天神地下街 / 周邊餐廳", lat: 33.5913, lng: 130.3989, isOptimized: false },
+            { id: "t3_10", time: "20:00", desc: "[地鐵機場線] 天神站 ➔ 博多站 (乘車約 6 分鐘) 回 THE BASICS Check-in", lat: 33.5888, lng: 130.4283, isOptimized: false }
         ]
     },
     {
@@ -69,12 +74,12 @@ const itineraryData = [
         theme: "🌷 豪斯登堡一日遊",
         hotel: "THE BASICS",
         timeline: [
-            { id: "t4_1", time: "08:15", desc: "THE BASICS 出發", lat: 33.5888, lng: 130.4283, isOptimized: false },
-            { id: "t4_2", time: "08:55", desc: "[JR 特急 1h50m] 搭乘豪斯登堡號", lat: 33.5897, lng: 130.4207, isOptimized: false },
-            { id: "t4_3", time: "11:00", desc: "豪斯登堡", lat: 33.0863, lng: 129.7892, isOptimized: false },
+            { id: "t4_1", time: "08:15", desc: "THE BASICS 出發 前往博多車站", lat: 33.5888, lng: 130.4283, isOptimized: false },
+            { id: "t4_2", time: "08:55", desc: "[JR 特急豪斯登堡號 Huis Ten Bosch] 博多站 ➔ 豪斯登堡站 (直達，乘車 1h50m)", lat: 33.5897, lng: 130.4207, isOptimized: false },
+            { id: "t4_3", time: "11:00", desc: "抵達豪斯登堡 開始遊玩", lat: 33.0863, lng: 129.7892, isOptimized: false },
             { id: "t4_4", time: "12:30", desc: "午餐：園區內餐廳", lat: 33.0863, lng: 129.7892, isOptimized: false },
-            { id: "t4_5", time: "17:30", desc: "[JR 特急 1h50m] 返回博多", lat: 33.5897, lng: 130.4207, isOptimized: false },
-            { id: "t4_6", time: "19:30", desc: "晚餐：THE BASICS 附近居酒屋", lat: 33.5888, lng: 130.4283, isOptimized: false }
+            { id: "t4_5", time: "17:30", desc: "[JR 特急豪斯登堡號 Huis Ten Bosch] 豪斯登堡站 ➔ 博多站 (直達，乘車 1h50m)", lat: 33.5897, lng: 130.4207, isOptimized: false },
+            { id: "t4_6", time: "19:30", desc: "晚餐：THE BASICS 附近居酒屋 / 車站便當", lat: 33.5888, lng: 130.4283, isOptimized: false }
         ]
     },
     {
@@ -83,24 +88,29 @@ const itineraryData = [
         hotel: "神和苑",
         timeline: [
             { id: "t5_1", time: "09:00", desc: "THE BASICS 退房", lat: 33.5888, lng: 130.4283, isOptimized: false },
-            { id: "t5_2", time: "09:30", desc: "[JR音速號 2h10m] 往別府車站", lat: 33.2796, lng: 131.5063, isOptimized: false },
-            { id: "t5_3", time: "12:30", desc: "午餐：地獄蒸工房 鐵輪", lat: 33.3146, lng: 131.4756, isOptimized: false },
-            { id: "t5_4", time: "14:30", desc: "海地獄 / 血池地獄", lat: 33.3155, lng: 131.4715, isOptimized: false },
-            { id: "t5_5", time: "16:00", desc: "[計程車 5 分鐘] 神和苑 (Check-in)", lat: 33.3159, lng: 131.4727, isOptimized: false },
-            { id: "t5_6", time: "18:00", desc: "晚餐：神和苑 飯店會席料理", lat: 33.3159, lng: 131.4727, isOptimized: false }
+            { id: "t5_2", time: "09:30", desc: "[JR 特急音速號 Sonic] 博多站 ➔ 別府站 (乘車約 2h10m)", lat: 33.2796, lng: 131.5063, isOptimized: false },
+            { id: "t5_3", time: "11:50", desc: "抵達別府車站 (寄放行李或搭車)", lat: 33.2796, lng: 131.5063, isOptimized: false },
+            { id: "t5_4", time: "12:15", desc: "[龜之井巴士 5/7/9號] 別府站西口 ➔ 鐵輪 (乘車約 20 分鐘)", lat: 33.3146, lng: 131.4756, isOptimized: false },
+            { id: "t5_5", time: "12:45", desc: "午餐：地獄蒸工房 鐵輪", lat: 33.3146, lng: 131.4756, isOptimized: false },
+            { id: "t5_6", time: "14:30", desc: "海地獄 / 血池地獄 巡禮", lat: 33.3155, lng: 131.4715, isOptimized: false },
+            { id: "t5_7", time: "16:00", desc: "[計程車] 鐵輪 ➔ 神和苑 (車程約 5 分鐘) Check-in", lat: 33.3159, lng: 131.4727, isOptimized: false },
+            { id: "t5_8", time: "18:00", desc: "晚餐：神和苑 飯店會席料理", lat: 33.3159, lng: 131.4727, isOptimized: false }
         ]
     },
     {
         day: "9/24 (四)",
-        theme: "🦒 九州動物園與由布院",
+        theme: "🦒 九州動物園與溫泉放鬆",
         hotel: "神和苑",
         timeline: [
             { id: "t6_1", time: "08:30", desc: "神和苑 出發", lat: 33.3159, lng: 131.4727, isOptimized: false },
-            { id: "t6_2", time: "09:00", desc: "[巴士 30 分鐘] 九州自然動物公園", lat: 33.3512, lng: 131.3916, isOptimized: false },
-            { id: "t6_3", time: "12:30", desc: "午餐：動物園內餐廳", lat: 33.3512, lng: 131.3916, isOptimized: false },
-            { id: "t6_4", time: "14:00", desc: "[車程 40 分鐘] 由布院 (金鱗湖散步)", lat: 33.2662, lng: 131.3683, isOptimized: false },
-            { id: "t6_5", time: "17:30", desc: "[車程 50 分鐘] 返回神和苑", lat: 33.3159, lng: 131.4727, isOptimized: false },
-            { id: "t6_6", time: "18:30", desc: "晚餐：神和苑", lat: 33.3159, lng: 131.4727, isOptimized: false }
+            { id: "t6_2", time: "08:50", desc: "[龜之井巴士 41號] 鐵輪 ➔ 九州自然動物公園 (乘車約 30 分鐘)", lat: 33.3512, lng: 131.3916, isOptimized: false },
+            { id: "t6_3", time: "09:40", desc: "抵達 九州自然動物公園 (African Safari)", lat: 33.3512, lng: 131.3916, isOptimized: false },
+            { id: "t6_4", time: "10:30", desc: "搭乘叢林巴士 (Jungle Bus) 餵食動物", lat: 33.3512, lng: 131.3916, isOptimized: false },
+            { id: "t6_5", time: "12:30", desc: "午餐：動物園內餐廳 或 輕食", lat: 33.3512, lng: 131.3916, isOptimized: false },
+            { id: "t6_6", time: "14:00", desc: "[龜之井巴士 41號] 九州自然動物公園 ➔ 鐵輪 (乘車約 30 分鐘)", lat: 33.3159, lng: 131.4727, isOptimized: false },
+            { id: "t6_7", time: "15:00", desc: "鐵輪溫泉老街散策與足湯 / 或回飯店休息", lat: 33.3159, lng: 131.4727, isOptimized: false },
+            { id: "t6_8", time: "16:00", desc: "返回 神和苑 享受溫泉與絕美能樂堂庭園", lat: 33.3159, lng: 131.4727, isOptimized: false },
+            { id: "t6_9", time: "18:30", desc: "晚餐：神和苑", lat: 33.3159, lng: 131.4727, isOptimized: false }
         ]
     },
     {
@@ -109,11 +119,12 @@ const itineraryData = [
         hotel: "THE LUIGANS",
         timeline: [
             { id: "t7_1", time: "09:30", desc: "神和苑 退房", lat: 33.3159, lng: 131.4727, isOptimized: false },
-            { id: "t7_2", time: "10:00", desc: "[JR+電車 3小時] 往海之中道", lat: 33.6627, lng: 130.3204, isOptimized: false },
-            { id: "t7_3", time: "13:00", desc: "午餐：水族館餐廳", lat: 33.6627, lng: 130.3204, isOptimized: false },
-            { id: "t7_4", time: "14:00", desc: "海之中道海洋生態科學館", lat: 33.6627, lng: 130.3204, isOptimized: false },
-            { id: "t7_5", time: "17:00", desc: "THE LUIGANS Spa and Resort (Check-in)", lat: 33.6609, lng: 130.3168, isOptimized: false },
-            { id: "t7_6", time: "18:30", desc: "晚餐：渡假村內餐廳", lat: 33.6609, lng: 130.3168, isOptimized: false }
+            { id: "t7_2", time: "10:00", desc: "[JR 特急音速號 Sonic] 別府站 ➔ 博多站 (乘車約 2h10m)", lat: 33.5897, lng: 130.4207, isOptimized: false },
+            { id: "t7_3", time: "12:30", desc: "[JR 鹿兒島本線轉香椎線] 博多站 ➔ 香椎站 ➔ 海之中道站 (乘車約 40 分鐘)", lat: 33.6627, lng: 130.3204, isOptimized: false },
+            { id: "t7_4", time: "13:30", desc: "午餐：海之中道水族館 餐廳", lat: 33.6627, lng: 130.3204, isOptimized: false },
+            { id: "t7_5", time: "14:30", desc: "海之中道海洋生態科學館 (Marine World)", lat: 33.6627, lng: 130.3204, isOptimized: false },
+            { id: "t7_6", time: "17:00", desc: "[步行] 抵達 THE LUIGANS Spa and Resort (Check-in)", lat: 33.6609, lng: 130.3168, isOptimized: false },
+            { id: "t7_7", time: "18:30", desc: "晚餐：渡假村內餐廳", lat: 33.6609, lng: 130.3168, isOptimized: false }
         ]
     },
     {
@@ -121,11 +132,11 @@ const itineraryData = [
         theme: "🏖️ 海島度假放鬆",
         hotel: "THE LUIGANS",
         timeline: [
-            { id: "t8_1", time: "09:00", desc: "THE LUIGANS (享用飯店早餐/設施)", lat: 33.6609, lng: 130.3168, isOptimized: false },
-            { id: "t8_2", time: "11:00", desc: "[租借腳踏車] 志賀島環島", lat: 33.6653, lng: 130.3015, isOptimized: false },
-            { id: "t8_3", time: "13:00", desc: "午餐：志賀島海鮮餐廳", lat: 33.6653, lng: 130.3015, isOptimized: false },
-            { id: "t8_4", time: "15:00", desc: "返回渡假村放鬆", lat: 33.6609, lng: 130.3168, isOptimized: false },
-            { id: "t8_5", time: "18:30", desc: "晚餐：THE LUIGANS 餐廳", lat: 33.6609, lng: 130.3168, isOptimized: false }
+            { id: "t8_1", time: "09:00", desc: "THE LUIGANS (享用飯店早餐與美麗泳池)", lat: 33.6609, lng: 130.3168, isOptimized: false },
+            { id: "t8_2", time: "11:00", desc: "[免費接駁車或租單車] 志賀島或海之中道海濱公園", lat: 33.6653, lng: 130.3015, isOptimized: false },
+            { id: "t8_3", time: "13:00", desc: "午餐：當地海鮮或公園內野餐", lat: 33.6653, lng: 130.3015, isOptimized: false },
+            { id: "t8_4", time: "15:00", desc: "返回渡假村徹底放鬆", lat: 33.6609, lng: 130.3168, isOptimized: false },
+            { id: "t8_5", time: "18:30", desc: "晚餐：THE LUIGANS 餐廳 (可預約 BBQ)", lat: 33.6609, lng: 130.3168, isOptimized: false }
         ]
     },
     {
@@ -134,8 +145,8 @@ const itineraryData = [
         hotel: "溫暖的家",
         timeline: [
             { id: "t9_1", time: "08:30", desc: "THE LUIGANS 退房", lat: 33.6609, lng: 130.3168, isOptimized: false },
-            { id: "t9_2", time: "08:45", desc: "[車程 50 分鐘] 前往機場", lat: 33.6609, lng: 130.3168, isOptimized: false },
-            { id: "t9_3", time: "09:35", desc: "福岡機場 (FUK) 報到", lat: 33.5859, lng: 130.4496, isOptimized: false },
+            { id: "t9_2", time: "08:45", desc: "[渡假村免費接駁巴士] 飯店 ➔ 博多站 ➔ 福岡機場 (車程約 50 分鐘)", lat: 33.6609, lng: 130.3168, isOptimized: false },
+            { id: "t9_3", time: "09:35", desc: "福岡機場 (FUK) 報到掛行李", lat: 33.5859, lng: 130.4496, isOptimized: false },
             { id: "t9_4", time: "12:20", desc: "BR105 班機起飛返回台北", lat: 33.5859, lng: 130.4496, isOptimized: false }
         ]
     }

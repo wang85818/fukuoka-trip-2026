@@ -49,9 +49,6 @@ function renderItinerary(itineraryData) {
                         <span class="day-badge">${dayData.day}</span>
                         <h3 class="theme">${dayData.theme}</h3>
                     </div>
-                    <button class="export-btn" onclick="window.optimizeModule.optimizeDay(${dayIndex})" style="background: var(--primary-color); border: none; padding: 5px 10px; border-radius: 8px; color: white; cursor: pointer;">
-                        <i class="fa-solid fa-route"></i> 最佳化路線
-                    </button>
                 </div>
                 <div class="card-body">
                     <div class="info-row" style="margin-top:0;">

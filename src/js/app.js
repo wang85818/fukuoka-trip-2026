@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        const CURRENT_DATA_VERSION = "4";
+        const CURRENT_DATA_VERSION = "5";
         const savedVersion = localStorage.getItem('fukuokaDataVersion');
         
         // Only force overwrite if no shared data was just loaded

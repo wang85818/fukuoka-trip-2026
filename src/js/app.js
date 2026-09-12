@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        const CURRENT_DATA_VERSION = "7";
+        const CURRENT_DATA_VERSION = "10";
         const savedVersion = localStorage.getItem('fukuokaDataVersion');
         
         // Only force overwrite if no shared data was just loaded
@@ -502,7 +502,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             
-            window.appData.reservationData.push({ type, name, time, note });
+            window.appData.reservationData.push({ type, name, time, note, checked: false });
             
             localStorage.setItem('fukuokaReservations', JSON.stringify(window.appData.reservationData));
             window.renderUI.renderReservations(window.appData.reservationData);
@@ -515,6 +515,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const resContainer = document.getElementById('reservations-container');
     if (resContainer) {
+        resContainer.addEventListener('change', (e) => {
+            const idx = parseInt(e.target.getAttribute('data-idx'));
+            if (isNaN(idx)) return;
+            
+            if (e.target.classList.contains('res-check')) {
+                window.appData.reservationData[idx].checked = e.target.checked;
+                localStorage.setItem('fukuokaReservations', JSON.stringify(window.appData.reservationData));
+                window.renderUI.renderReservations(window.appData.reservationData);
+            } else if (e.target.classList.contains('res-edit-name')) {
+                window.appData.reservationData[idx].name = e.target.value.trim();
+                localStorage.setItem('fukuokaReservations', JSON.stringify(window.appData.reservationData));
+            } else if (e.target.classList.contains('res-edit-time')) {
+                window.appData.reservationData[idx].time = e.target.value.trim();
+                localStorage.setItem('fukuokaReservations', JSON.stringify(window.appData.reservationData));
+            } else if (e.target.classList.contains('res-edit-note')) {
+                window.appData.reservationData[idx].note = e.target.value.trim();
+                localStorage.setItem('fukuokaReservations', JSON.stringify(window.appData.reservationData));
+            }
+        });
+
         resContainer.addEventListener('click', (e) => {
             const delBtn = e.target.closest('.res-del-btn');
             if (delBtn) {

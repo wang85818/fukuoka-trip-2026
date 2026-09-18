@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        const CURRENT_DATA_VERSION = "11";
+        const CURRENT_DATA_VERSION = "12";
         const savedVersion = localStorage.getItem('fukuokaDataVersion');
         
         // Only force overwrite if no shared data was just loaded
@@ -645,22 +645,30 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCountdown();
     setInterval(updateCountdown, 1000 * 60 * 60); // Update every hour
 
-    // 16. Weather Forecast Fetch (Open-Meteo)
+    // 16. Weather Forecast Fetch (With Timeout and Fallback)
     const fetchWeather = async () => {
         const el = document.getElementById('weather-text');
         if (!el) return;
+        
+        const fetchWithTimeout = async (url, ms = 3000) => {
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), ms);
+            const response = await fetch(url, { signal: controller.signal });
+            clearTimeout(id);
+            return response;
+        };
+
         try {
-            // Fetch current weather for Fukuoka (33.59, 130.41)
+            // Try Open-Meteo first
             const url = "https://api.open-meteo.com/v1/forecast?latitude=33.59&longitude=130.41&current_weather=true";
-            const response = await fetch(url);
+            const response = await fetchWithTimeout(url, 4000);
             const data = await response.json();
             
             if(data.current_weather) {
                 const temp = data.current_weather.temperature;
                 const weathercode = data.current_weather.weathercode;
-                let icon = 'fa-cloud'; // default
+                let icon = 'fa-cloud';
                 
-                // simple mapping for WMO weather codes
                 if(weathercode <= 1) icon = 'fa-sun';
                 else if (weathercode <= 3) icon = 'fa-cloud-sun';
                 else if (weathercode <= 45) icon = 'fa-smog';
@@ -669,9 +677,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 else if (weathercode <= 99) icon = 'fa-cloud-bolt';
 
                 el.innerHTML = `福岡 <i class="fa-solid ${icon}" style="margin: 0 4px;"></i> ${temp}°C`;
+                return;
             }
         } catch(err) {
-            el.innerHTML = "天氣更新失敗";
+            console.warn("Open-Meteo failed, trying fallback...", err);
+        }
+
+        try {
+            // Fallback to wttr.in JSON API
+            const fallbackUrl = "https://wttr.in/Fukuoka?format=j1";
+            const response = await fetchWithTimeout(fallbackUrl, 4000);
+            const data = await response.json();
+            
+            if (data.current_condition && data.current_condition[0]) {
+                const temp = data.current_condition[0].temp_C;
+                el.innerHTML = `福岡 <i class="fa-solid fa-cloud-sun" style="margin: 0 4px;"></i> ${temp}°C`;
+                return;
+            }
+        } catch(err) {
+            console.warn("Fallback weather API failed.", err);
+            // Graceful degradation instead of ugly error message
+            el.innerHTML = `福岡 <i class="fa-solid fa-plane" style="margin: 0 4px;"></i> 期待出發`;
         }
     };
     fetchWeather();

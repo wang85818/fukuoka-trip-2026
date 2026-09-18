@@ -76,7 +76,9 @@ const mapModule = {
         this.map.fitBounds(bounds, { padding: [50, 50] });
 
         // If there's more than one stop, fetch route from OSRM
-        if (validStops.length > 1) {
+        // Skip routing if any point is in Taiwan (lng < 125) to prevent OSRM 400 cross-ocean errors
+        const hasOverseas = validStops.some(s => s.lng < 125);
+        if (validStops.length > 1 && !hasOverseas) {
             try {
                 // OSRM expects lon,lat
                 const coordinates = validStops.map(s => `${s.lng},${s.lat}`).join(';');
